@@ -1,0 +1,437 @@
+# EXACT SPECIFICATIONS: PINN-Generated NN2 Training Data
+
+## FILE: [sensors_pinn_benzene_ppb_forecast.csv](file:///Users/neevpratap/Desktop/madis_data_desktop_updated/sensors_pinn_benzene_ppb_forecast.csv)
+
+This is the **EXACT** PINN-generated superimposed dataset used to train NN2.
+
+---
+
+## 1. FILE STRUCTURE
+
+```
+Format: CSV (comma-separated values)
+Encoding: UTF-8
+Rows: 7,419 + 1 header row
+Columns: 10
+File size: ~1.2 MB
+```
+
+### Column Specification:
+```
+1. t                    (datetime string, format: "YYYY-MM-DD HH:MM:SS")
+2. sensor_482010026     (float, ppb)
+3. sensor_482010057     (float, ppb)
+4. sensor_482010069     (float, ppb)
+5. sensor_482010617     (float, ppb)
+6. sensor_482010803     (float, ppb)
+7. sensor_482011015     (float, ppb)
+8. sensor_482011035     (float, ppb)
+9. sensor_482011039     (float, ppb)
+10. sensor_482016000    (float, ppb)
+```
+
+---
+
+## 2. EXACT DATA SPECIFICATIONS
+
+### Temporal Coverage:
+```
+Start time:     2019-01-01 03:00:00
+End time:       2020-01-01 02:00:00
+Time step:      1 hour
+Total samples:  7,419 timestamps
+Missing hours:  1,341 hours (from 8,760 possible)
+              
+NOTE: The +3 hour shift is already applied!
+      - Original predictions were 2019-01-01 00:00 to 2019-12-31 23:00
+      - After +3h shift: 2019-01-01 03:00 to 2020-01-01 02:00
+```
+
+### Data Loss Breakdown:
+- **First 3 hours** (2019-01-01 00:00 to 02:00): Removed by time-shift
+- **Missing periods**: ~1,338 hours due to sensor outages or invalid meteorology
+
+---
+
+## 3. EXACT CONCENTRATION STATISTICS (ppb)
+
+### sensor_482010026:
+```
+Count:      7,419
+Mean:       4.728404 ppb
+Std Dev:    2.415000 ppb
+Min:        0.000000 ppb
+25%:        3.070499 ppb
+Median:     4.620720 ppb
+75%:        6.268809 ppb
+Max:        15.944057 ppb
+```
+
+### sensor_482010057:
+```
+Count:      7,419
+Mean:       10.059622 ppb
+Std Dev:    3.215438 ppb
+Min:        0.000000 ppb
+25%:        7.926008 ppb
+Median:     10.153521 ppb
+75%:        12.143469 ppb
+Max:        22.886627 ppb
+```
+
+### sensor_482010069:
+```
+Count:      7,419
+Mean:       12.179104 ppb
+Std Dev:    2.750599 ppb
+Min:        0.119190 ppb
+25%:        10.349698 ppb
+Median:     12.316260 ppb
+75%:        13.975664 ppb
+Max:        22.624525 ppb
+```
+
+### sensor_482010617:
+```
+Count:      7,419
+Mean:       2.734401 ppb
+Std Dev:    1.675345 ppb
+Min:        0.000000 ppb
+25%:        1.513010 ppb
+Median:     2.729521 ppb
+75%:        3.876522 ppb
+Max:        10.316550 ppb
+```
+
+### sensor_482010803:
+```
+Count:      7,419
+Mean:       6.731053 ppb
+Std Dev:    2.831246 ppb
+Min:        0.000000 ppb
+25%:        4.823939 ppb
+Median:     6.720264 ppb
+75%:        8.545630 ppb
+Max:        19.189473 ppb
+```
+
+### sensor_482011015:
+```
+Count:      7,419
+Mean:       4.346834 ppb
+Std Dev:    2.602843 ppb
+Min:        0.000000 ppb
+25%:        2.496882 ppb
+Median:     4.291715 ppb
+75%:        6.094929 ppb
+Max:        15.629847 ppb
+```
+
+### sensor_482011035:
+```
+Count:      7,419
+Mean:       11.630127 ppb
+Std Dev:    3.719086 ppb
+Min:        0.000000 ppb
+25%:        9.144143 ppb
+Median:     11.802322 ppb
+75%:        14.069888 ppb
+Max:        25.994691 ppb
+```
+
+### sensor_482011039:
+```
+Count:      7,419
+Mean:       16.200754 ppb
+Std Dev:    9.410724 ppb
+Min:        0.000000 ppb
+25%:        9.563527 ppb
+Median:     16.205653 ppb
+75%:        22.515842 ppb
+Max:        57.869993 ppb
+```
+
+### sensor_482016000:
+```
+Count:      7,419
+Mean:       11.633893 ppb
+Std Dev:    2.131254 ppb
+Min:        2.164432 ppb  ← NOTE: Never reaches zero!
+25%:        10.209982 ppb
+Median:     11.746085 ppb
+75%:        13.011542 ppb
+Max:        19.800089 ppb
+```
+
+---
+
+## 4. FIRST 5 ROWS (EXACT VALUES)
+
+```csv
+t,sensor_482010026,sensor_482010057,sensor_482010069,sensor_482010617,sensor_482010803,sensor_482011015,sensor_482011035,sensor_482011039,sensor_482016000
+2019-01-01 03:00:00,5.534982315429865,11.732002232612786,14.031129100496734,3.8866002219172557,7.6076999454976,5.511163232625638,13.624137074354948,19.447543063347226,13.057516397522445
+2019-01-01 04:00:00,5.923456012039168,12.0901224247731,14.321730118051427,4.151191223768919,7.950149591313242,5.948473779660841,14.027348738096947,20.82168287692096,13.284375550336147
+2019-01-01 05:00:00,5.968075777970505,12.008559518665265,14.245049636442744,4.1814205870336245,7.9106322626468994,5.98111106348065,13.942571650704636,20.71693417059835,13.202798064611901
+2019-01-01 06:00:00,5.33079059018246,11.341631402083792,13.703763934123032,3.753237779365655,7.334800349758318,5.289505514837973,13.15486119533189,18.52518018765025,12.81944100792914
+2019-01-01 07:00:00,5.351564573853594,11.100900094331159,13.493093082630267,3.774001347974817,7.221842944143191,5.308480213359534,12.866230166241309,18.292249911498757,12.642663792289728
+```
+
+---
+
+## 5. HOW THIS DATA WAS GENERATED
+
+### Step 1: Run PINN on 20 Facilities
+```python
+# For each facility in training_data_2019_beststations/:
+for facility in [BASF, ExxonMobil_Baytown_Refinery, ...]:  # 20 facilities
+    for timestamp in hourly_2019:  # 8,760 hours
+        for sensor in [482010026, 482010057, ..., 482016000]:  # 9 sensors
+            
+            # PINN inputs (10 features):
+            x = sensor_x_coordinate  # meters
+            y = sensor_y_coordinate  # meters
+            t = hours_since_2019_01_01_00_00  # 0 to 8759
+            cx = facility_source_x  # meters
+            cy = facility_source_y  # meters
+            u = wind_u  # m/s
+            v = wind_v  # m/s
+            d = source_diameter  # meters
+            kappa = dispersion_coefficient_D  # dimensionless
+            Q = emission_rate  # kg/s
+            
+            # PINN forward pass:
+            raw_output = PINN(x, y, t, cx, cy, u, v, d, kappa, Q)
+            
+            # Unit conversion (CRITICAL!):
+            concentration_ppb = raw_output * 3.13e8
+            
+            # Clip negative values:
+            concentration_ppb = max(concentration_ppb, 0.0)
+            
+            # Save to: pinn_predictions/{facility}_pinn_predictions.csv
+```
+
+### Step 2: Superimpose (Sum) All Facilities
+```python
+# Group by (timestamp, sensor_id) and SUM:
+superimposed = all_predictions.groupby(['timestamp', 'sensor_id']).agg({
+    'predicted_concentration': 'sum'  # This is the key!
+})
+
+# Example for sensor 482010026 @ 2019-01-01 00:00:00:
+total_conc = (
+    BASF_contribution +
+    ExxonMobil_Baytown_Refinery_contribution +
+    Shell_Deer_Park_contribution +
+    ITC_Deer_Park_contribution +
+    ... (16 more facilities)
+)
+```
+
+### Step 3: Pivot to Wide Format
+```python
+wide_df = superimposed.pivot(
+    index='timestamp',
+    columns='sensor_id',
+    values='predicted_concentration'
+)
+
+# Rename columns:
+wide_df.columns = [f'sensor_{col}' for col in wide_df.columns]
+```
+
+### Step 4: Apply +3 Hour Time-Shift
+```python
+# CRITICAL STEP:
+wide_df['t'] = wide_df['t'] + pd.Timedelta(hours=3)
+
+# Before: 2019-01-01 00:00 to 2019-12-31 23:00
+# After:  2019-01-01 03:00 to 2020-01-01 02:00
+```
+
+### Step 5: Save as sensors_pinn_benzene_ppb_forecast.csv
+```python
+wide_df.to_csv('sensors_pinn_benzene_ppb_forecast.csv', index=False)
+```
+
+---
+
+## 6. PINN MODEL SPECIFICATIONS
+
+### Architecture:
+```
+Input Layer:    10 features
+Hidden Layer 1: 128 neurons + ReLU
+Hidden Layer 2: 128 neurons + ReLU
+Hidden Layer 3: 128 neurons + ReLU
+Hidden Layer 4: 128 neurons + ReLU
+Output Layer:   1 neuron (raw concentration)
+```
+
+### Normalization Ranges (used inside PINN):
+```python
+x_min, x_max = 0.0, 30000.0      # meters
+y_min, y_max = 0.0, 30000.0      # meters
+t_min, t_max = 0.0, 8760.0       # hours
+cx_min, cx_max = 0.0, 30000.0    # meters
+cy_min, cy_max = 0.0, 30000.0    # meters
+u_min, u_max = -15.0, 15.0       # m/s
+v_min, v_max = -15.0, 15.0       # m/s
+d_min, d_max = 0.0, 200.0        # meters
+kappa_min, kappa_max = 0.0, 200.0
+Q_min, Q_max = 0.0, 0.01         # kg/s
+```
+
+### Unit Conversion Factor:
+```python
+CONVERSION_FACTOR = 3.13e8
+# Converts dimensionless PINN output to ppb
+```
+
+---
+
+## 7. SENSOR COORDINATES (EXACT)
+
+```python
+SENSORS = {
+    '482010026': (13972.62, 19915.57),  # meters from origin
+    '482010057': (3017.18, 12334.2),
+    '482010069': (817.42, 9218.92),
+    '482010617': (27049.57, 22045.66),
+    '482010803': (8836.35, 15717.2),
+    '482011015': (18413.8, 15068.96),
+    '482011035': (1159.98, 12272.52),
+    '482011039': (13661.93, 5193.24),
+    '482016000': (1546.9, 6786.33),
+}
+```
+
+---
+
+## 8. VALIDATION CHECKS
+
+To verify your recreation is correct, check these:
+
+### ✅ File Properties:
+- [x] Exactly 7,419 data rows (+ 1 header)
+- [x] Exactly 10 columns
+- [x] Date range: 2019-01-01 03:00:00 to 2020-01-01 02:00:00
+- [x] No missing values (all 7,419 × 9 = 66,771 sensor values present)
+
+### ✅ Statistical Validation:
+- [x] sensor_482010026 mean: 4.73 ± 0.01 ppb
+- [x] sensor_482010057 mean: 10.06 ± 0.01 ppb
+- [x] sensor_482010069 mean: 12.18 ± 0.01 ppb
+- [x] sensor_482010617 mean: 2.73 ± 0.01 ppb
+- [x] sensor_482010803 mean: 6.73 ± 0.01 ppb
+- [x] sensor_482011015 mean: 4.35 ± 0.01 ppb
+- [x] sensor_482011035 mean: 11.63 ± 0.01 ppb
+- [x] sensor_482011039 mean: 16.20 ± 0.01 ppb
+- [x] sensor_482016000 mean: 11.63 ± 0.01 ppb
+
+### ✅ First Row Validation:
+```python
+# 2019-01-01 03:00:00 (exact values):
+sensor_482010026 = 5.534982315429865
+sensor_482010057 = 11.732002232612786
+sensor_482010069 = 14.031129100496734
+sensor_482010617 = 3.8866002219172557
+sensor_482010803 = 7.6076999454976
+sensor_482011015 = 5.511163232625638
+sensor_482011035 = 13.624137074354948
+sensor_482011039 = 19.447543063347226
+sensor_482016000 = 13.057516397522445
+```
+
+---
+
+## 9. COMMON ERRORS TO AVOID
+
+### ❌ ERROR 1: Negative Values
+```
+WRONG: Mean values around -97 ppb or -2071 ppb
+CAUSE: Not applying unit conversion factor (3.13e8)
+FIX:   conc_ppb = raw_pinn_output * 3.13e8
+```
+
+### ❌ ERROR 2: Values Too Low
+```
+WRONG: Mean values around 0.001 to 0.01 ppb
+CAUSE: Converting twice or using wrong factor
+FIX:   Only apply conversion once, use exactly 3.13e8
+```
+
+### ❌ ERROR 3: Missing Time-Shift
+```
+WRONG: Date range 2019-01-01 00:00 to 2019-12-31 23:00
+CAUSE: Forgot to apply +3 hour shift
+FIX:   df['t'] = df['t'] + pd.Timedelta(hours=3)
+```
+
+### ❌ ERROR 4: Wrong Aggregation
+```
+WRONG: Using mean(), median(), or max() to aggregate facilities
+CAUSE: Misunderstanding superposition principle
+FIX:   Use sum() to aggregate: .groupby(...).agg({'concentration': 'sum'})
+```
+
+---
+
+## 10. PYTHON RECREATION SCRIPT
+
+```python
+import pandas as pd
+import numpy as np
+from pathlib import Path
+
+# Step 1: Load all PINN prediction files
+pinn_dir = Path('pinn_predictions')
+all_preds = []
+
+for file in pinn_dir.glob('*_pinn_predictions.csv'):
+    df = pd.read_csv(file)
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    all_preds.append(df)
+
+combined = pd.concat(all_preds, ignore_index=True)
+print(f"Total predictions: {len(combined):,}")
+
+# Step 2: Superimpose (sum) by timestamp and sensor
+aggregated = combined.groupby(['timestamp', 'sensor_id'], as_index=False).agg({
+    'predicted_concentration': 'sum'
+})
+
+# Step 3: Pivot to wide format
+wide = aggregated.pivot(
+    index='timestamp',
+    columns='sensor_id',
+    values='predicted_concentration'
+)
+wide.columns = [f'sensor_{col}' for col in wide.columns]
+wide = wide.reset_index().rename(columns={'timestamp': 't'})
+
+# Step 4: Apply +3 hour time-shift
+wide['t'] = wide['t'] + pd.Timedelta(hours=3)
+
+# Step 5: Sort and validate
+wide = wide.sort_values('t')
+print(f"Date range: {wide['t'].min()} to {wide['t'].max()}")
+print(f"Shape: {wide.shape}")
+print(f"Mean sensor_482010026: {wide['sensor_482010026'].mean():.6f} ppb")
+
+# Step 6: Save
+wide.to_csv('sensors_pinn_benzene_ppb_forecast.csv', index=False)
+print("Saved!")
+```
+
+---
+
+## SUMMARY
+
+This dataset represents:
+- **20 facilities** × **8,760 hours** × **9 sensors** = 1,576,800 predictions
+- Aggregated to **7,419 timestamps** × **9 sensors** = 66,771 final values
+- Each value is the **sum of 20 facility contributions**
+- Time-shifted by **+3 hours** for forecast alignment
+- All concentrations in **ppb** (parts per billion)
+- Ready for NN2 training!

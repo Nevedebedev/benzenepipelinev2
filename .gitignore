@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Data and Binaries (GitHub 100MB limit)
+*.nc
+*.dylib
+*.so
+*.exe
+
+# OS
+.DS_Store
