@@ -1,0 +1,18 @@
+/opt/anaconda3/envs/benzene/lib/python3.10/site-packages/sklearn/base.py:442: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.6.1 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+================================================================================
+PIPELINE VALIDATION - JANUARY-MARCH 2021
+================================================================================
+
+Loading models...
+  ⚠️  Model has 45 input features (includes current_sensors)
+  ⚠️  Will use zeros for current_sensors during inference
+  ✓ Models loaded
+  ✓ NN2 outputs in ppb: True
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/benzenepipelinev2/realtime/validate_jan_mar_2021.py", line 605, in <module>
+    main()
+  File "/Users/neevpratap/Desktop/benzenepipelinev2/realtime/validate_jan_mar_2021.py", line 373, in main
+    pinn, nn2, scalers, sensor_coords_spatial, nn2_mapping_model = load_models()
+ValueError: not enough values to unpack (expected 5, got 4)

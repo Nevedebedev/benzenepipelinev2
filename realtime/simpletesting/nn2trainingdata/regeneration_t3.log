@@ -1,0 +1,81 @@
+================================================================================
+REGENERATING NN2 TRAINING DATA WITH CORRECT TANH PINN
+================================================================================
+
+Loading PINN from /Users/neevpratap/Downloads/pinn_combined_final2.pth...
+\nPINN Architecture:
+Sequential(
+  (0): Linear(in_features=10, out_features=128, bias=True)
+  (1): Tanh()
+  (2): Linear(in_features=128, out_features=128, bias=True)
+  (3): Tanh()
+  (4): Linear(in_features=128, out_features=128, bias=True)
+  (5): Tanh()
+  (6): Linear(in_features=128, out_features=128, bias=True)
+  (7): Tanh()
+  (8): Linear(in_features=128, out_features=1, bias=True)
+  (9): Softplus(beta=1.0, threshold=20.0)
+)
+
+Found 20 facility files
+
+Processing facilities:   0%|          | 0/20 [00:00<?, ?it/s]Processing facilities:   5%|▌         | 1/20 [00:10<03:19, 10.51s/it]Processing facilities:  10%|█         | 2/20 [00:20<03:08, 10.47s/it]Processing facilities:  15%|█▌        | 3/20 [00:32<03:04, 10.87s/it]Processing facilities:  20%|██        | 4/20 [00:43<02:55, 10.96s/it]Processing facilities:  25%|██▌       | 5/20 [00:54<02:44, 10.95s/it]Processing facilities:  30%|███       | 6/20 [01:04<02:31, 10.80s/it]Processing facilities:  35%|███▌      | 7/20 [01:15<02:19, 10.70s/it]Processing facilities:  40%|████      | 8/20 [01:25<02:07, 10.63s/it]Processing facilities:  45%|████▌     | 9/20 [01:36<01:57, 10.70s/it]Processing facilities:  50%|█████     | 10/20 [01:47<01:46, 10.64s/it]Processing facilities:  55%|█████▌    | 11/20 [01:57<01:34, 10.51s/it]Processing facilities:  60%|██████    | 12/20 [02:08<01:24, 10.54s/it]Processing facilities:  65%|██████▌   | 13/20 [02:18<01:14, 10.67s/it]Processing facilities:  70%|███████   | 14/20 [02:29<01:03, 10.66s/it]Processing facilities:  75%|███████▌  | 15/20 [02:40<00:52, 10.60s/it]Processing facilities:  80%|████████  | 16/20 [02:50<00:42, 10.56s/it]Processing facilities:  85%|████████▌ | 17/20 [03:01<00:31, 10.56s/it]Processing facilities:  90%|█████████ | 18/20 [03:12<00:21, 10.70s/it]Processing facilities:  95%|█████████▌| 19/20 [03:23<00:10, 10.92s/it]Processing facilities: 100%|██████████| 20/20 [03:34<00:00, 10.81s/it]Processing facilities: 100%|██████████| 20/20 [03:34<00:00, 10.71s/it]
+
+Processed 7419 unique timestamps
+
+Creating output DataFrame...
+✓ Saved to /Users/neevpratap/simpletesting/nn2trainingdata/total_concentrations.csv
+  Shape: (7419, 10)
+  Columns: ['timestamp', 'sensor_482010026', 'sensor_482010057', 'sensor_482010069', 'sensor_482010617', 'sensor_482010803', 'sensor_482011015', 'sensor_482011035', 'sensor_482011039', 'sensor_482016000']
+
+PREDICTION STATISTICS:
+================================================================================
+  482010026:
+    Mean: 22.88 ppb
+    Median: 4.69 ppb
+    Max: 3738.76 ppb
+    Min: 0.01 ppb
+  482010057:
+    Mean: 85.81 ppb
+    Median: 0.01 ppb
+    Max: 8806.40 ppb
+    Min: 0.00 ppb
+  482010069:
+    Mean: 37.58 ppb
+    Median: 0.00 ppb
+    Max: 2528.15 ppb
+    Min: 0.00 ppb
+  482010617:
+    Mean: 1.19 ppb
+    Median: 0.00 ppb
+    Max: 364.67 ppb
+    Min: 0.00 ppb
+  482010803:
+    Mean: 28.21 ppb
+    Median: 0.01 ppb
+    Max: 2436.50 ppb
+    Min: 0.00 ppb
+  482011015:
+    Mean: 49.97 ppb
+    Median: 1.31 ppb
+    Max: 2321.29 ppb
+    Min: 0.00 ppb
+  482011035:
+    Mean: 29.01 ppb
+    Median: 0.00 ppb
+    Max: 3595.18 ppb
+    Min: 0.00 ppb
+  482011039:
+    Mean: 12.88 ppb
+    Median: 0.03 ppb
+    Max: 2562.45 ppb
+    Min: 0.00 ppb
+  482016000:
+    Mean: 22.22 ppb
+    Median: 0.00 ppb
+    Max: 17253.77 ppb
+    Min: 0.00 ppb
+
+================================================================================
+COMPLETE!
+================================================================================

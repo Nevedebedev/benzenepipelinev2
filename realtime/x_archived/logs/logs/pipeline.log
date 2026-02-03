@@ -1,0 +1,54 @@
+[2026-02-01 00:39:15] SUCCESS | Current: 2026-02-01 00:00 | Forecast: 2026-02-01 03:00 | PINN: 18.074-1019.301 ppb | NN2: 0.000-999.827 ppb
+[2026-02-01 00:53:20] SUCCESS | Current: 2026-02-01 00:00 | Forecast: 2026-02-01 03:00 | PINN: 18.074-1019.301 ppb | NN2: 0.000-999.827 ppb
+[2026-02-01 01:18:15] SUCCESS | Current: 2026-02-01 01:00 | Forecast: 2026-02-01 04:00 | PINN: 25.234-1327.551 ppb | NN2: 0.000-1313.222 ppb
+[2026-02-01 01:28:50] SUCCESS | Current: 2026-02-01 01:00 | Forecast: 2026-02-01 04:00 | PINN: 25.814-9418.179 ppb | NN2: 0.000-10041.345 ppb
+[2026-02-01 01:40:03] SUCCESS | Current: 2026-02-01 01:00 | Forecast: 2026-02-01 04:00 | PINN: 86.312-9097.960 ppb | NN2: 0.000-8933.258 ppb
+[2026-02-01 11:17:24] SUCCESS | Current: 2026-02-01 11:00 | Forecast: 2026-02-01 14:00 | PINN: 139.239-110868.717 ppb | NN2: 0.000-108588.959 ppb
+[2026-02-01 11:45:15] SUCCESS | Current: 2026-02-01 11:00 | Forecast: 2026-02-01 14:00 | PINN: 107.511-10015.287 ppb | NN2: 0.000-9478.616 ppb
+[2026-02-01 12:00:02] SUCCESS | Current: 2026-02-01 12:00 | Forecast: 2026-02-01 15:00 | PINN: 82.509-9599.213 ppb | NN2: 0.000-9759.702 ppb
+[2026-02-01 12:15:01] SUCCESS | Current: 2026-02-01 12:00 | Forecast: 2026-02-01 15:00 | PINN: 82.564-9794.103 ppb | NN2: 0.000-8111.947 ppb
+[2026-02-01 12:30:01] SUCCESS | Current: 2026-02-01 12:00 | Forecast: 2026-02-01 15:00 | PINN: 81.683-9790.984 ppb | NN2: 0.000-8114.069 ppb
+[2026-02-01 12:45:01] SUCCESS | Current: 2026-02-01 12:00 | Forecast: 2026-02-01 15:00 | PINN: 82.564-9794.103 ppb | NN2: 0.000-8111.947 ppb
+[2026-02-01 13:00:01] SUCCESS | Current: 2026-02-01 12:00 | Forecast: 2026-02-01 15:00 | PINN: 82.564-9794.103 ppb | NN2: 0.000-8111.947 ppb
+[2026-02-01 13:12:48] SUCCESS | Current: 2026-02-01 13:00 | Forecast: 2026-02-01 16:00 | PINN: 45.519-9650.408 ppb | NN2: 0.000-8257.043 ppb
+[2026-02-01 13:27:01] SUCCESS | Current: 2026-02-01 13:15 | Forecast: 2026-02-01 16:15 | PINN: 48.767-9656.295 ppb | NN2: 0.000-8867.902 ppb
+[2026-02-01 13:42:44] SUCCESS | Current: 2026-02-01 13:30 | Forecast: 2026-02-01 16:30 | PINN: 32.698-9538.965 ppb | NN2: 0.000-9538.965 ppb
+[2026-02-01 13:55:08] SUCCESS | Current: 2026-02-01 13:45 | Forecast: 2026-02-01 16:45 | PINN: 82.570-9783.692 ppb | NN2: 0.000-9783.692 ppb
+[2026-02-01 13:55:21] SUCCESS | Current: 2026-02-01 13:45 | Forecast: 2026-02-01 16:45 | PINN: 82.570-9783.692 ppb | NN2: 0.000-9783.692 ppb
+[2026-02-01 14:10:02] SUCCESS | Current: 2026-02-01 14:00 | Forecast: 2026-02-01 17:00 | PINN: 31.657-9532.757 ppb | NN2: 0.000-9532.757 ppb
+[2026-02-01 14:25:01] SUCCESS | Current: 2026-02-01 14:15 | Forecast: 2026-02-01 17:15 | PINN: 38.239-9542.518 ppb | NN2: 0.000-9542.518 ppb
+[2026-02-01 14:25:38] ERROR | Current: 2026-02-01 14:15 | Error: Pipeline failed: 'ConcentrationPredictor' object has no attribute 'continuous_dir'
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 92, in run_once
+    pinn_field, nn2_field, _ = self.predictor.predict_full_domain(
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        facility_params, current_time
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/neevpratap/Desktop/realtime/concentration_predictor.py", line 190, in predict_full_domain
+    self._log_sensor_predictions(self.x_flat, self.y_flat, total_pinn_field, nn2_field, forecast_time)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/neevpratap/Desktop/realtime/concentration_predictor.py", line 458, in _log_sensor_predictions
+    sensor_log_path = self.continuous_dir / "sensor_predictions_timeseries.csv"
+                      ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ConcentrationPredictor' object has no attribute 'continuous_dir'
+
+[2026-02-01 14:25:59] SUCCESS | Current: 2026-02-01 14:15 | Forecast: 2026-02-01 17:15 | PINN: 38.239-9542.518 ppb | NN2: 0.000-9542.518 ppb
+[2026-02-01 14:40:01] SUCCESS | Current: 2026-02-01 14:30 | Forecast: 2026-02-01 17:30 | PINN: 31.737-9532.982 ppb | NN2: 0.000-9532.982 ppb
+[2026-02-01 14:55:01] SUCCESS | Current: 2026-02-01 14:45 | Forecast: 2026-02-01 17:45 | PINN: 82.573-9777.785 ppb | NN2: 0.000-9777.785 ppb
+[2026-02-01 15:10:01] SUCCESS | Current: 2026-02-01 15:00 | Forecast: 2026-02-01 18:00 | PINN: 36.590-8898.152 ppb | NN2: 0.000-8898.152 ppb
+[2026-02-01 15:25:01] SUCCESS | Current: 2026-02-01 15:15 | Forecast: 2026-02-01 18:15 | PINN: 50.650-8995.924 ppb | NN2: 0.000-8995.924 ppb
+[2026-02-01 15:40:01] SUCCESS | Current: 2026-02-01 15:30 | Forecast: 2026-02-01 18:30 | PINN: 63.083-9126.221 ppb | NN2: 0.000-9126.221 ppb
+[2026-02-01 15:54:01] SUCCESS | Current: 2026-02-01 15:45 | Forecast: 2026-02-01 18:45 | PINN: 77.828-9067.234 ppb | NN2: 0.000-9067.234 ppb
+[2026-02-01 16:09:01] SUCCESS | Current: 2026-02-01 16:00 | Forecast: 2026-02-01 19:00 | PINN: 77.678-8896.208 ppb | NN2: 0.000-8896.208 ppb
+[2026-02-01 16:23:01] SUCCESS | Current: 2026-02-01 16:15 | Forecast: 2026-02-01 19:15 | PINN: 108.144-9819.595 ppb | NN2: 43.857-9819.595 ppb
+[2026-02-01 16:38:01] SUCCESS | Current: 2026-02-01 16:30 | Forecast: 2026-02-01 19:30 | PINN: 79.105-9080.232 ppb | NN2: 0.000-9080.232 ppb
+[2026-02-01 16:53:01] SUCCESS | Current: 2026-02-01 16:45 | Forecast: 2026-02-01 19:45 | PINN: 77.831-9061.738 ppb | NN2: 0.000-9061.738 ppb
+[2026-02-01 17:08:01] SUCCESS | Current: 2026-02-01 17:00 | Forecast: 2026-02-01 20:00 | PINN: 77.832-9060.400 ppb | NN2: 0.000-9060.400 ppb
+[2026-02-01 17:12:58] SUCCESS | Current: 2026-02-01 17:00 | Forecast: 2026-02-01 20:00 | PINN: 77.832-9060.400 ppb | NN2: 62.265-7248.320 ppb
+[2026-02-01 17:23:01] SUCCESS | Current: 2026-02-01 17:15 | Forecast: 2026-02-01 20:15 | PINN: 77.999-8886.300 ppb | NN2: 0.000-8886.300 ppb
+[2026-02-01 17:37:01] SUCCESS | Current: 2026-02-01 17:30 | Forecast: 2026-02-01 20:30 | PINN: 134.263-10530.928 ppb | NN2: 134.263-10530.928 ppb
+[2026-02-01 17:52:01] SUCCESS | Current: 2026-02-01 17:45 | Forecast: 2026-02-01 20:45 | PINN: 77.834-9056.284 ppb | NN2: 0.000-9056.284 ppb
+[2026-02-01 18:06:02] SUCCESS | Current: 2026-02-01 18:00 | Forecast: 2026-02-01 21:00 | PINN: 77.835-9054.908 ppb | NN2: 0.000-9054.908 ppb
+[2026-02-01 18:21:01] SUCCESS | Current: 2026-02-01 18:15 | Forecast: 2026-02-01 21:15 | PINN: 146.847-60766.979 ppb | NN2: 146.847-54319.919 ppb

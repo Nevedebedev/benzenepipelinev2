@@ -1,0 +1,249 @@
+Verifying data files...
+  ✓ /content/data/sensors_final.csv
+  ✓ /content/data/sensor_coordinates.csv
+  ✓ /content/data/total_superimposed_concentrations.csv
+  ✓ /content/data/data_nonzero/
+
+✓ All data files found!
+
+
+================================================================================
+STEP 1: LEAVE-ONE-OUT CROSS-VALIDATION
+================================================================================
+================================================================================
+NN2 TRAINING - LEAVE-ONE-SENSOR-OUT CROSS-VALIDATION
+================================================================================
+
+Device: cuda
+Data directory: /content/data/
+Save directory: /content/models/leave_one_out/
+
+Fitting scalers on full dataset...
+✓ Scalers fitted
+
+================================================================================
+Training with sensor sensor_482010026 held out (sensor 1/9)
+================================================================================
+Epoch 5/50: Train Loss=10.778983, Val Loss=8.163864
+Epoch 10/50: Train Loss=10.356791, Val Loss=7.943980
+Epoch 15/50: Train Loss=9.987050, Val Loss=7.810081
+Epoch 20/50: Train Loss=9.836353, Val Loss=7.674472
+Epoch 25/50: Train Loss=9.867529, Val Loss=7.758693
+Epoch 30/50: Train Loss=9.690409, Val Loss=7.625374
+Epoch 35/50: Train Loss=9.758297, Val Loss=8.217867
+Epoch 40/50: Train Loss=9.512582, Val Loss=7.569922
+Epoch 45/50: Train Loss=9.667768, Val Loss=7.609982
+Early stopping at epoch 48
+
+Results for sensor_482010026:
+  PINN MAE: 1.9277 ppb
+  NN2 MAE:  0.7318 ppb
+  Improvement: 62.0%
+
+================================================================================
+Training with sensor sensor_482010057 held out (sensor 2/9)
+================================================================================
+Epoch 5/50: Train Loss=10.870722, Val Loss=7.976756
+Epoch 10/50: Train Loss=10.256009, Val Loss=7.899604
+Epoch 15/50: Train Loss=10.170317, Val Loss=7.858018
+Epoch 20/50: Train Loss=10.040804, Val Loss=7.661148
+Epoch 25/50: Train Loss=9.910290, Val Loss=7.715502
+Epoch 30/50: Train Loss=9.836617, Val Loss=7.587998
+Epoch 35/50: Train Loss=9.824035, Val Loss=7.618767
+Epoch 40/50: Train Loss=9.723204, Val Loss=7.604540
+Early stopping at epoch 43
+
+Results for sensor_482010057:
+  PINN MAE: 2.0125 ppb
+  NN2 MAE:  0.9789 ppb
+  Improvement: 51.4%
+
+================================================================================
+Training with sensor sensor_482010069 held out (sensor 3/9)
+================================================================================
+Epoch 5/50: Train Loss=10.858380, Val Loss=8.470690
+Epoch 10/50: Train Loss=10.430968, Val Loss=7.980435
+Epoch 15/50: Train Loss=10.103494, Val Loss=7.876229
+Early stopping at epoch 16
+
+Results for sensor_482010069:
+  PINN MAE: 1.9312 ppb
+  NN2 MAE:  0.2776 ppb
+  Improvement: 85.6%
+
+================================================================================
+Training with sensor sensor_482010617 held out (sensor 4/9)
+================================================================================
+Epoch 5/50: Train Loss=10.739025, Val Loss=7.909739
+Epoch 10/50: Train Loss=10.438460, Val Loss=7.786715
+Epoch 15/50: Train Loss=10.067465, Val Loss=7.748996
+Epoch 20/50: Train Loss=10.040710, Val Loss=7.692764
+Epoch 25/50: Train Loss=9.804168, Val Loss=7.704375
+Epoch 30/50: Train Loss=9.622705, Val Loss=7.857314
+Epoch 35/50: Train Loss=9.512880, Val Loss=7.684362
+Epoch 40/50: Train Loss=9.404021, Val Loss=7.667530
+Early stopping at epoch 42
+
+Results for sensor_482010617:
+  PINN MAE: 1.9721 ppb
+  NN2 MAE:  0.4185 ppb
+  Improvement: 78.8%
+
+================================================================================
+Training with sensor sensor_482010803 held out (sensor 5/9)
+================================================================================
+Epoch 5/50: Train Loss=10.786358, Val Loss=7.860984
+Epoch 10/50: Train Loss=10.300472, Val Loss=8.042040
+Epoch 15/50: Train Loss=10.192076, Val Loss=7.773418
+Epoch 20/50: Train Loss=9.926364, Val Loss=7.937992
+Epoch 25/50: Train Loss=9.807484, Val Loss=7.822176
+Epoch 30/50: Train Loss=9.716879, Val Loss=7.687754
+Epoch 35/50: Train Loss=9.880384, Val Loss=7.696765
+Epoch 40/50: Train Loss=9.708970, Val Loss=7.624630
+Early stopping at epoch 42
+
+Results for sensor_482010803:
+  PINN MAE: 1.3431 ppb
+  NN2 MAE:  0.3671 ppb
+  Improvement: 72.7%
+
+================================================================================
+Training with sensor sensor_482011015 held out (sensor 6/9)
+================================================================================
+Epoch 5/50: Train Loss=10.870310, Val Loss=7.877713
+Epoch 10/50: Train Loss=10.508580, Val Loss=7.893383
+Epoch 15/50: Train Loss=10.239829, Val Loss=7.741477
+Epoch 20/50: Train Loss=10.060061, Val Loss=8.088435
+Epoch 25/50: Train Loss=9.948441, Val Loss=7.879112
+Epoch 30/50: Train Loss=9.855698, Val Loss=8.085211
+Epoch 35/50: Train Loss=9.855264, Val Loss=7.686763
+Epoch 40/50: Train Loss=9.833110, Val Loss=8.360889
+Early stopping at epoch 41
+
+Results for sensor_482011015:
+  PINN MAE: 1.6432 ppb
+  NN2 MAE:  0.9417 ppb
+  Improvement: 42.7%
+
+================================================================================
+Training with sensor sensor_482011035 held out (sensor 7/9)
+================================================================================
+Epoch 5/50: Train Loss=10.834023, Val Loss=8.001661
+Epoch 10/50: Train Loss=10.511991, Val Loss=8.050704
+Epoch 15/50: Train Loss=10.143873, Val Loss=7.787234
+Epoch 20/50: Train Loss=10.323409, Val Loss=7.853396
+Epoch 25/50: Train Loss=9.702932, Val Loss=7.668897
+Epoch 30/50: Train Loss=9.553225, Val Loss=7.630978
+Epoch 35/50: Train Loss=9.517063, Val Loss=7.726541
+Epoch 40/50: Train Loss=9.572687, Val Loss=7.748596
+Epoch 45/50: Train Loss=9.445773, Val Loss=7.557400
+Epoch 50/50: Train Loss=9.347602, Val Loss=7.640069
+
+Results for sensor_482011035:
+  PINN MAE: 1.5742 ppb
+  NN2 MAE:  0.2910 ppb
+  Improvement: 81.5%
+
+================================================================================
+Training with sensor sensor_482011039 held out (sensor 8/9)
+================================================================================
+Epoch 5/50: Train Loss=11.047732, Val Loss=7.913130
+Epoch 10/50: Train Loss=10.374642, Val Loss=8.054906
+Epoch 15/50: Train Loss=10.137785, Val Loss=7.722624
+Epoch 20/50: Train Loss=10.023143, Val Loss=7.805423
+Epoch 25/50: Train Loss=9.973148, Val Loss=7.720549
+Epoch 30/50: Train Loss=9.901301, Val Loss=7.958144
+Epoch 35/50: Train Loss=9.893592, Val Loss=7.962386
+Epoch 40/50: Train Loss=9.826311, Val Loss=7.681289
+Early stopping at epoch 43
+
+Results for sensor_482011039:
+  PINN MAE: 1.5004 ppb
+  NN2 MAE:  0.4860 ppb
+  Improvement: 67.6%
+
+================================================================================
+Training with sensor sensor_482016000 held out (sensor 9/9)
+================================================================================
+Epoch 5/50: Train Loss=11.069930, Val Loss=8.380508
+Epoch 10/50: Train Loss=10.536303, Val Loss=9.250712
+Epoch 15/50: Train Loss=10.250086, Val Loss=7.879816
+Epoch 20/50: Train Loss=9.847006, Val Loss=7.791896
+Epoch 25/50: Train Loss=9.817799, Val Loss=7.585200
+Epoch 30/50: Train Loss=9.629774, Val Loss=7.592900
+Epoch 35/50: Train Loss=9.497067, Val Loss=7.506899
+Epoch 40/50: Train Loss=9.512521, Val Loss=7.549593
+Epoch 45/50: Train Loss=9.564006, Val Loss=7.632341
+Epoch 50/50: Train Loss=9.364018, Val Loss=7.526574
+
+Results for sensor_482016000:
+  PINN MAE: 2.6189 ppb
+  NN2 MAE:  0.4400 ppb
+  Improvement: 83.2%
+
+================================================================================
+TRAINING COMPLETE!
+================================================================================
+
+Results saved to: /content/models/leave_one_out//leave_one_out_results.json
+Scalers saved to: /content/models/leave_one_out//nn2_scalers.pkl
+Models saved to: /content/models/leave_one_out//
+
+Average improvement: 69.5%
+
+================================================================================
+STEP 2: MASTER MODEL TRAINING
+================================================================================
+================================================================================
+NN2 TRAINING - MASTER MODEL (ALL SENSORS)
+================================================================================
+
+Device: cuda
+Save directory: /content/models/leave_one_out/
+
+Loading full dataset...
+✓ Loaded 5173 samples
+
+Train samples: 4138, Val samples: 1035
+
+Starting training...
+
+Epoch 5/50: Train Loss=12.021841, Val Loss=6.986636
+Epoch 10/50: Train Loss=11.522676, Val Loss=5.825686
+Epoch 15/50: Train Loss=11.121096, Val Loss=5.768489
+Epoch 20/50: Train Loss=10.917123, Val Loss=6.116647
+Epoch 25/50: Train Loss=10.703092, Val Loss=5.907521
+Epoch 30/50: Train Loss=10.789733, Val Loss=5.795207
+Epoch 35/50: Train Loss=10.431995, Val Loss=5.682846
+Epoch 40/50: Train Loss=10.518448, Val Loss=5.959247
+Early stopping at epoch 43
+
+Evaluating master model on all sensors...
+
+================================================================================
+MASTER MODEL RESULTS (All Sensors)
+================================================================================
+sensor_482010026: PINN MAE=1.8316 ppb, NN2 MAE=0.5819 ppb, Improvement=68.2%
+sensor_482010057: PINN MAE=1.9805 ppb, NN2 MAE=0.9098 ppb, Improvement=54.1%
+sensor_482010069: PINN MAE=1.8917 ppb, NN2 MAE=0.2981 ppb, Improvement=84.2%
+sensor_482010617: PINN MAE=1.9533 ppb, NN2 MAE=0.3869 ppb, Improvement=80.2%
+sensor_482010803: PINN MAE=1.3547 ppb, NN2 MAE=0.4466 ppb, Improvement=67.0%
+sensor_482011015: PINN MAE=1.6464 ppb, NN2 MAE=0.9954 ppb, Improvement=39.5%
+sensor_482011035: PINN MAE=1.6020 ppb, NN2 MAE=0.3192 ppb, Improvement=80.1%
+sensor_482011039: PINN MAE=1.3826 ppb, NN2 MAE=0.3675 ppb, Improvement=73.4%
+sensor_482016000: PINN MAE=2.7109 ppb, NN2 MAE=0.4654 ppb, Improvement=82.8%
+
+Average improvement: 70.0%
+Master model saved to: /content/models/leave_one_out//nn2_master_model.pth
+================================================================================
+
+================================================================================
+✓ ALL TRAINING COMPLETE!
+================================================================================
+
+Files saved:
+  • Leave-one-out models: /content/models/leave_one_out//nn2_sensor_*.pth
+  • Master model: /content/models/leave_one_out//nn2_master_model.pth
+  • Scalers: /content/models/leave_one_out//nn2_scalers.pkl
+  • Results: /content/models/leave_one_out//leave_one_out_results.json
+================================================================================

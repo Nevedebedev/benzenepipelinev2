@@ -98,20 +98,20 @@ class PipelineVisualizer:
         # Format timestamp for filename
         timestamp_str = forecast_time.strftime("%Y-%m-%d_%H%M")
         
-        # Generate PINN heatmap
-        pinn_path = self.viz_dir / f"pinn_{timestamp_str}.png"
+        # Generate PINN heatmap - FULL DOMAIN (30km x 30km)
+        pinn_path = self.viz_dir / f"pinn_full_domain_{timestamp_str}.png"
         self._create_heatmap(
             X, Y, pinn_2d,
-            title=f"PINN Benzene Forecast\n{forecast_time.strftime('%Y-%m-%d %H:%M')} UTC",
+            title=f"PINN Benzene Forecast - Full Domain (30km × 30km)\n{forecast_time.strftime('%Y-%m-%d %H:%M')} UTC",
             filename=pinn_path,
             vmin=0, vmax=max(pinn_field.max(), 100)
         )
         
-        # Generate NN2 heatmap
-        nn2_path = self.viz_dir / f"nn2_{timestamp_str}.png"
+        # Generate NN2 heatmap - FULL DOMAIN (30km x 30km)
+        nn2_path = self.viz_dir / f"nn2_full_domain_{timestamp_str}.png"
         self._create_heatmap(
             X, Y, nn2_2d,
-            title=f"NN2-Corrected Benzene Forecast\n{forecast_time.strftime('%Y-%m-%d %H:%M')} UTC",
+            title=f"NN2-Corrected Benzene Forecast - Full Domain (30km × 30km)\n{forecast_time.strftime('%Y-%m-%d %H:%M')} UTC",
             filename=nn2_path,
             vmin=0, vmax=max(nn2_field.max(), 100)
         )

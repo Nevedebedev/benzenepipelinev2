@@ -1,0 +1,1453 @@
+/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.6.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+======================================================================
+REAL-TIME BENZENE CONCENTRATION PIPELINE
+======================================================================
+
+Initializing components...
+[Concentration Predictor] Loading models...
+  Loading NN2 model with scalers...
+  ✓ NN2 model loaded with scalers
+  ✓ Models loaded
+
+  Grid: 30x30 = 900 points
+✓ Pipeline initialized
+
+======================================================================
+STARTING CONTINUOUS MODE - Updates every 15 minutes
+Press Ctrl+C to stop
+======================================================================
+
+======================================================================
+PIPELINE RUN: 2026-02-01 13:45
+Forecast for: 2026-02-01 16:45 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 13:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 13:45
+  Forecast time: 2026-02-01 16:45 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001200
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001000
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000900
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000400
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000450
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000350
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000400
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000150
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 16:45:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=82.5695, max=9783.6920 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -665.61 to 316.79 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9783.6920 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1645.png
+    NN2:  nn2_2026-02-01_1645.png
+    ✓ Sensor-bounded: max PINN=3452.1, max NN2=3452.1 ppb
+  ✓ Correction stats:
+    Mean correction: -16.12 ppb
+    Correction range: [-510.72, 412.69] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 82.5695 - 9783.6920 ppb
+  NN2 range: 0.0000 - 9783.6920 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 14:10:00
+Sleeping for 878 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 14:00
+Forecast for: 2026-02-01 17:00 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 14:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=4.8 m/s, temp=283.7 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 14:00
+  Forecast time: 2026-02-01 17:00 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001200
+  ✓ Shell Deer Park Refinery: u=4.76, v=0.75, D=80.31, Q=0.001000
+  ✓ Valero Houston Refinery: u=4.76, v=0.75, D=80.31, Q=0.000900
+  ✓ LyondellBasell Pasadena Comple: u=4.76, v=0.75, D=80.31, Q=0.000800
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ Chevron Phillips Chemical Co: u=4.76, v=0.75, D=80.31, Q=0.000500
+  ✓ TPC Group: u=4.76, v=0.75, D=80.31, Q=0.000400
+  ✓ INEOS Phenol: u=4.76, v=0.75, D=80.31, Q=0.000300
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ BASF Pasadena: u=4.76, v=0.75, D=80.31, Q=0.000360
+  ✓ Huntsman International: u=4.76, v=0.75, D=80.31, Q=0.000450
+  ✓ Invista: u=4.76, v=0.75, D=80.31, Q=0.000350
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000400
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ K-Solv Channelview: u=4.76, v=0.75, D=80.31, Q=0.000280
+  ✓ Oxy Vinyls Deer Park: u=4.76, v=0.75, D=80.31, Q=0.000320
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000150
+  ✓ Enterprise Houston Terminal: u=4.76, v=0.75, D=80.31, Q=0.000120
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 17:00:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=31.6566, max=9532.7571 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -445.34 to 298.49 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9532.7571 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1700.png
+    NN2:  nn2_2026-02-01_1700.png
+    ✓ Sensor-bounded: max PINN=3231.0, max NN2=3231.0 ppb
+  ✓ Correction stats:
+    Mean correction: -8.99 ppb
+    Correction range: [-348.58, 370.02] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 31.6566 - 9532.7571 ppb
+  NN2 range: 0.0000 - 9532.7571 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 14:25:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 14:15
+Forecast for: 2026-02-01 17:15 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 14:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=6.4 m/s, temp=283.7 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=3.2 m/s, temp=285.4 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 14:15
+  Forecast time: 2026-02-01 17:15 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001200
+  ✓ Shell Deer Park Refinery: u=6.44, v=0.11, D=14.55, Q=0.001000
+  ✓ Valero Houston Refinery: u=6.44, v=0.11, D=14.55, Q=0.000900
+  ✓ LyondellBasell Pasadena Comple: u=6.44, v=0.11, D=14.55, Q=0.000800
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ Chevron Phillips Chemical Co: u=6.44, v=0.11, D=14.55, Q=0.000500
+  ✓ TPC Group: u=6.44, v=0.11, D=14.55, Q=0.000400
+  ✓ INEOS Phenol: u=6.44, v=0.11, D=14.55, Q=0.000300
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ BASF Pasadena: u=6.44, v=0.11, D=14.55, Q=0.000360
+  ✓ Huntsman International: u=6.44, v=0.11, D=14.55, Q=0.000450
+  ✓ Invista: u=6.44, v=0.11, D=14.55, Q=0.000350
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ LyondellBasell Bayport Polymer: u=-3.19, v=-0.28, D=53.34, Q=0.000400
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ K-Solv Channelview: u=6.44, v=0.11, D=14.55, Q=0.000280
+  ✓ Oxy Vinyls Deer Park: u=6.44, v=0.11, D=14.55, Q=0.000320
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000150
+  ✓ Enterprise Houston Terminal: u=6.44, v=0.11, D=14.55, Q=0.000120
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 17:15:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=38.2395, max=9542.5183 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -441.13 to 300.18 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9542.5183 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1715.png
+    NN2:  nn2_2026-02-01_1715.png
+    ✓ Sensor-bounded: max PINN=3238.0, max NN2=3238.0 ppb
+  ✓ Correction stats:
+    Mean correction: -8.80 ppb
+    Correction range: [-344.59, 371.99] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 38.2395 - 9542.5183 ppb
+  NN2 range: 0.0000 - 9542.5183 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 14:40:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 14:30
+Forecast for: 2026-02-01 17:30 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 14:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=4.8 m/s, temp=283.7 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=3.2 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 14:30
+  Forecast time: 2026-02-01 17:30 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001200
+  ✓ Shell Deer Park Refinery: u=4.81, v=0.42, D=80.31, Q=0.001000
+  ✓ Valero Houston Refinery: u=4.81, v=0.42, D=80.31, Q=0.000900
+  ✓ LyondellBasell Pasadena Comple: u=4.81, v=0.42, D=80.31, Q=0.000800
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ Chevron Phillips Chemical Co: u=4.81, v=0.42, D=80.31, Q=0.000500
+  ✓ TPC Group: u=4.81, v=0.42, D=80.31, Q=0.000400
+  ✓ INEOS Phenol: u=4.81, v=0.42, D=80.31, Q=0.000300
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ BASF Pasadena: u=4.81, v=0.42, D=80.31, Q=0.000360
+  ✓ Huntsman International: u=4.81, v=0.42, D=80.31, Q=0.000450
+  ✓ Invista: u=4.81, v=0.42, D=80.31, Q=0.000350
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ LyondellBasell Bayport Polymer: u=-3.09, v=-0.83, D=53.34, Q=0.000400
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ K-Solv Channelview: u=4.81, v=0.42, D=80.31, Q=0.000280
+  ✓ Oxy Vinyls Deer Park: u=4.81, v=0.42, D=80.31, Q=0.000320
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000150
+  ✓ Enterprise Houston Terminal: u=4.81, v=0.42, D=80.31, Q=0.000120
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 17:30:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=31.7369, max=9532.9821 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -444.23 to 298.42 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9532.9821 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1730.png
+    NN2:  nn2_2026-02-01_1730.png
+    ✓ Sensor-bounded: max PINN=3232.1, max NN2=3232.1 ppb
+  ✓ Correction stats:
+    Mean correction: -8.92 ppb
+    Correction range: [-347.63, 369.94] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 31.7369 - 9532.9821 ppb
+  NN2 range: 0.0000 - 9532.9821 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 14:55:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 14:45
+Forecast for: 2026-02-01 17:45 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 14:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 14:45
+  Forecast time: 2026-02-01 17:45 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001200
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.001000
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000900
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000400
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000450
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000350
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000400
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000150
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 17:45:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=82.5730, max=9777.7849 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -665.43 to 316.69 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9777.7849 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1745.png
+    NN2:  nn2_2026-02-01_1745.png
+    ✓ Sensor-bounded: max PINN=3450.9, max NN2=3450.9 ppb
+  ✓ Correction stats:
+    Mean correction: -16.11 ppb
+    Correction range: [-510.56, 412.57] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 82.5730 - 9777.7849 ppb
+  NN2 range: 0.0000 - 9777.7849 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 15:10:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 15:00
+Forecast for: 2026-02-01 18:00 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 15:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=4.8 m/s, temp=284.8 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 15:00
+  Forecast time: 2026-02-01 18:00 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=2.90, v=3.85, D=80.31, Q=0.000700
+  ✓ Valero Houston Refinery: u=2.90, v=3.85, D=80.31, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=2.90, v=3.85, D=80.31, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=2.90, v=3.85, D=80.31, Q=0.000300
+  ✓ TPC Group: u=2.90, v=3.85, D=80.31, Q=0.000260
+  ✓ INEOS Phenol: u=2.90, v=3.85, D=80.31, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=2.90, v=3.85, D=80.31, Q=0.000240
+  ✓ Huntsman International: u=2.90, v=3.85, D=80.31, Q=0.000280
+  ✓ Invista: u=2.90, v=3.85, D=80.31, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=2.90, v=3.85, D=80.31, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=2.90, v=3.85, D=80.31, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=2.90, v=3.85, D=80.31, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 18:00:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=36.5902, max=8898.1518 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -472.45 to 291.89 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=8898.1518 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1800.png
+    NN2:  nn2_2026-02-01_1800.png
+    ✓ Sensor-bounded: max PINN=3075.4, max NN2=3075.4 ppb
+  ✓ Correction stats:
+    Mean correction: -10.20 ppb
+    Correction range: [-369.31, 364.77] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 36.5902 - 8898.1518 ppb
+  NN2 range: 0.0000 - 8898.1518 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 15:25:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 15:15
+Forecast for: 2026-02-01 18:15 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 15:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=4.8 m/s, temp=285.4 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=6.4 m/s, temp=287.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 15:15
+  Forecast time: 2026-02-01 18:15 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=0.75, v=4.76, D=80.31, Q=0.000700
+  ✓ Valero Houston Refinery: u=0.75, v=4.76, D=80.31, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=0.75, v=4.76, D=80.31, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=0.75, v=4.76, D=80.31, Q=0.000300
+  ✓ TPC Group: u=0.75, v=4.76, D=80.31, Q=0.000260
+  ✓ INEOS Phenol: u=0.75, v=4.76, D=80.31, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=0.75, v=4.76, D=80.31, Q=0.000240
+  ✓ Huntsman International: u=0.75, v=4.76, D=80.31, Q=0.000280
+  ✓ Invista: u=0.75, v=4.76, D=80.31, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-5.89, v=2.62, D=14.55, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=0.75, v=4.76, D=80.31, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=0.75, v=4.76, D=80.31, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=0.75, v=4.76, D=80.31, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 18:15:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=50.6503, max=8995.9243 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -558.47 to 305.57 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=8995.9243 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1815.png
+    NN2:  nn2_2026-02-01_1815.png
+    ✓ Sensor-bounded: max PINN=3176.5, max NN2=3176.5 ppb
+  ✓ Correction stats:
+    Mean correction: -12.47 ppb
+    Correction range: [-432.78, 389.64] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 50.6503 - 8995.9243 ppb
+  NN2 range: 0.0000 - 8995.9243 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 15:40:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 15:30
+Forecast for: 2026-02-01 18:30 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 15:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=6.4 m/s, temp=285.4 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=6.4 m/s, temp=287.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 15:30
+  Forecast time: 2026-02-01 18:30 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=2.20, v=6.06, D=14.55, Q=0.000700
+  ✓ Valero Houston Refinery: u=2.20, v=6.06, D=14.55, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=2.20, v=6.06, D=14.55, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=2.20, v=6.06, D=14.55, Q=0.000300
+  ✓ TPC Group: u=2.20, v=6.06, D=14.55, Q=0.000260
+  ✓ INEOS Phenol: u=2.20, v=6.06, D=14.55, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=2.20, v=6.06, D=14.55, Q=0.000240
+  ✓ Huntsman International: u=2.20, v=6.06, D=14.55, Q=0.000280
+  ✓ Invista: u=2.20, v=6.06, D=14.55, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-5.89, v=2.62, D=14.55, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=2.20, v=6.06, D=14.55, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=2.20, v=6.06, D=14.55, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=2.20, v=6.06, D=14.55, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 18:30:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=63.0833, max=9126.2210 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -558.80 to 324.24 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9126.2210 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1830.png
+    NN2:  nn2_2026-02-01_1830.png
+    ✓ Sensor-bounded: max PINN=3288.8, max NN2=3288.8 ppb
+  ✓ Correction stats:
+    Mean correction: -12.39 ppb
+    Correction range: [-434.38, 409.78] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 63.0833 - 9126.2210 ppb
+  NN2 range: 0.0000 - 9126.2210 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 15:54:00
+Sleeping for 839 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 15:45
+Forecast for: 2026-02-01 18:45 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 15:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 15:45
+  Forecast time: 2026-02-01 18:45 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000700
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000260
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 18:45:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.8279, max=9067.2343 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -624.84 to 293.99 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9067.2343 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1845.png
+    NN2:  nn2_2026-02-01_1845.png
+    ✓ Sensor-bounded: max PINN=3201.4, max NN2=3201.4 ppb
+  ✓ Correction stats:
+    Mean correction: -15.23 ppb
+    Correction range: [-478.87, 384.05] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.8279 - 9067.2343 ppb
+  NN2 range: 0.0000 - 9067.2343 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 16:09:00
+Sleeping for 899 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 16:00
+Forecast for: 2026-02-01 19:00 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 16:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=6.4 m/s, temp=285.9 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 16:00
+  Forecast time: 2026-02-01 19:00 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=0.00, v=-6.44, D=14.55, Q=0.000700
+  ✓ Valero Houston Refinery: u=0.00, v=-6.44, D=14.55, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=0.00, v=-6.44, D=14.55, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=0.00, v=-6.44, D=14.55, Q=0.000300
+  ✓ TPC Group: u=0.00, v=-6.44, D=14.55, Q=0.000260
+  ✓ INEOS Phenol: u=0.00, v=-6.44, D=14.55, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=0.00, v=-6.44, D=14.55, Q=0.000240
+  ✓ Huntsman International: u=0.00, v=-6.44, D=14.55, Q=0.000280
+  ✓ Invista: u=0.00, v=-6.44, D=14.55, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=0.00, v=-6.44, D=14.55, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=0.00, v=-6.44, D=14.55, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=0.00, v=-6.44, D=14.55, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 19:00:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.6781, max=8896.2075 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -466.01 to 289.09 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=8896.2075 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1900.png
+    NN2:  nn2_2026-02-01_1900.png
+    ✓ Sensor-bounded: max PINN=3062.5, max NN2=3062.5 ppb
+  ✓ Correction stats:
+    Mean correction: -10.67 ppb
+    Correction range: [-361.18, 363.05] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.6781 - 8896.2075 ppb
+  NN2 range: 0.0000 - 8896.2075 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 16:23:00
+Sleeping for 839 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 16:15
+Forecast for: 2026-02-01 19:15 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 16:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=6.4 m/s, temp=285.4 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=8.1 m/s, temp=283.7 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 16:15
+  Forecast time: 2026-02-01 19:15 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-6.38, v=-0.90, D=14.55, Q=0.000700
+  ✓ Valero Houston Refinery: u=-6.38, v=-0.90, D=14.55, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-6.38, v=-0.90, D=14.55, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-6.38, v=-0.90, D=14.55, Q=0.000300
+  ✓ TPC Group: u=-6.38, v=-0.90, D=14.55, Q=0.000260
+  ✓ INEOS Phenol: u=-6.38, v=-0.90, D=14.55, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-6.38, v=-0.90, D=14.55, Q=0.000240
+  ✓ Huntsman International: u=-6.38, v=-0.90, D=14.55, Q=0.000280
+  ✓ Invista: u=-6.38, v=-0.90, D=14.55, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-6.18, v=5.18, D=18.21, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-6.38, v=-0.90, D=14.55, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-6.38, v=-0.90, D=14.55, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-6.38, v=-0.90, D=14.55, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 19:15:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=108.1437, max=9819.5949 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -682.80 to 313.08 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=43.8575, max=9819.5949 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1915.png
+    NN2:  nn2_2026-02-01_1915.png
+    ✓ Sensor-bounded: max PINN=3668.3, max NN2=3668.3 ppb
+  ✓ Correction stats:
+    Mean correction: -16.66 ppb
+    Correction range: [-515.77, 406.14] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 108.1437 - 9819.5949 ppb
+  NN2 range: 43.8575 - 9819.5949 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 16:38:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 16:30
+Forecast for: 2026-02-01 19:30 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 16:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=4.8 m/s, temp=283.1 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 16:30
+  Forecast time: 2026-02-01 19:30 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000700
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000260
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-3.64, v=3.16, D=10.90, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 19:30:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=79.1047, max=9080.2321 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -626.38 to 294.44 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9080.2321 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1930.png
+    NN2:  nn2_2026-02-01_1930.png
+    ✓ Sensor-bounded: max PINN=3206.8, max NN2=3206.8 ppb
+  ✓ Correction stats:
+    Mean correction: -15.27 ppb
+    Correction range: [-479.99, 384.60] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 79.1047 - 9080.2321 ppb
+  NN2 range: 0.0000 - 9080.2321 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 16:53:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 16:45
+Forecast for: 2026-02-01 19:45 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 16:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 16:45
+  Forecast time: 2026-02-01 19:45 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000700
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000260
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 19:45:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.8311, max=9061.7379 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -624.72 to 293.95 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9061.7379 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_1945.png
+    NN2:  nn2_2026-02-01_1945.png
+    ✓ Sensor-bounded: max PINN=3200.3, max NN2=3200.3 ppb
+  ✓ Correction stats:
+    Mean correction: -15.22 ppb
+    Correction range: [-478.76, 384.00] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.8311 - 9061.7379 ppb
+  NN2 range: 0.0000 - 9061.7379 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 17:08:00
+Sleeping for 899 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 17:00
+Forecast for: 2026-02-01 20:00 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 17:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 17:00
+  Forecast time: 2026-02-01 20:00 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000700
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000260
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 20:00:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.8317, max=9060.3997 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -624.76 to 294.01 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9060.3997 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_2000.png
+    NN2:  nn2_2026-02-01_2000.png
+    ✓ Sensor-bounded: max PINN=3200.0, max NN2=3200.0 ppb
+  ✓ Correction stats:
+    Mean correction: -15.21 ppb
+    Correction range: [-478.78, 384.08] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.8317 - 9060.3997 ppb
+  NN2 range: 0.0000 - 9060.3997 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 17:23:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 17:15
+Forecast for: 2026-02-01 20:15 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 17:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=8.1 m/s, temp=283.7 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=3.2 m/s, temp=282.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 17:15
+  Forecast time: 2026-02-01 20:15 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=0.00, v=-8.06, D=18.21, Q=0.000700
+  ✓ Valero Houston Refinery: u=0.00, v=-8.06, D=18.21, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=0.00, v=-8.06, D=18.21, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=0.00, v=-8.06, D=18.21, Q=0.000300
+  ✓ TPC Group: u=0.00, v=-8.06, D=18.21, Q=0.000260
+  ✓ INEOS Phenol: u=0.00, v=-8.06, D=18.21, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=0.00, v=-8.06, D=18.21, Q=0.000240
+  ✓ Huntsman International: u=0.00, v=-8.06, D=18.21, Q=0.000280
+  ✓ Invista: u=0.00, v=-8.06, D=18.21, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-2.23, v=2.30, D=7.24, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=0.00, v=-8.06, D=18.21, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=0.00, v=-8.06, D=18.21, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=0.00, v=-8.06, D=18.21, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 20:15:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.9993, max=8886.3002 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -461.46 to 286.79 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=8886.3002 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_2015.png
+    NN2:  nn2_2026-02-01_2015.png
+    ✓ Sensor-bounded: max PINN=3050.6, max NN2=3050.6 ppb
+  ✓ Correction stats:
+    Mean correction: -10.57 ppb
+    Correction range: [-357.34, 360.34] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.9993 - 8886.3002 ppb
+  NN2 range: 0.0000 - 8886.3002 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 17:37:00
+Sleeping for 838 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 17:30
+Forecast for: 2026-02-01 20:30 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 17:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=8.1 m/s, temp=283.1 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 17:30
+  Forecast time: 2026-02-01 20:30 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-8.00, v=-0.98, D=18.21, Q=0.000700
+  ✓ Valero Houston Refinery: u=-8.00, v=-0.98, D=18.21, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-8.00, v=-0.98, D=18.21, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-8.00, v=-0.98, D=18.21, Q=0.000300
+  ✓ TPC Group: u=-8.00, v=-0.98, D=18.21, Q=0.000260
+  ✓ INEOS Phenol: u=-8.00, v=-0.98, D=18.21, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-8.00, v=-0.98, D=18.21, Q=0.000240
+  ✓ Huntsman International: u=-8.00, v=-0.98, D=18.21, Q=0.000280
+  ✓ Invista: u=-8.00, v=-0.98, D=18.21, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-8.00, v=-0.98, D=18.21, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-8.00, v=-0.98, D=18.21, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-8.00, v=-0.98, D=18.21, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 20:30:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=134.2628, max=10530.9276 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -832.15 to 298.95 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=134.2628, max=10530.9276 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_2030.png
+    NN2:  nn2_2026-02-01_2030.png
+    ✓ Sensor-bounded: max PINN=4193.7, max NN2=4193.7 ppb
+  ✓ Correction stats:
+    Mean correction: -19.47 ppb
+    Correction range: [-609.24, 397.62] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 134.2628 - 10530.9276 ppb
+  NN2 range: 134.2628 - 10530.9276 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 17:52:00
+Sleeping for 898 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 17:45
+Forecast for: 2026-02-01 20:45 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 17:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 17:45
+  Forecast time: 2026-02-01 20:45 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000700
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000260
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 20:45:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.8341, max=9056.2844 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -624.62 to 293.92 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9056.2844 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_2045.png
+    NN2:  nn2_2026-02-01_2045.png
+    ✓ Sensor-bounded: max PINN=3199.2, max NN2=3199.2 ppb
+  ✓ Correction stats:
+    Mean correction: -15.20 ppb
+    Correction range: [-478.67, 383.97] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.8341 - 9056.2844 ppb
+  NN2 range: 0.0000 - 9056.2844 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 18:06:00
+Sleeping for 839 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 18:00
+Forecast for: 2026-02-01 21:00 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 18:00 UTC
+  ✓ MGPT2: wind=5.0 m/s, temp=288.0 K
+  ✓ F1563: wind=5.0 m/s, temp=288.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=5.0 m/s, temp=288.0 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 18:00
+  Forecast time: 2026-02-01 21:00 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000700
+  ✓ Valero Houston Refinery: u=-0.00, v=5.00, D=11.29, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-0.00, v=5.00, D=11.29, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-0.00, v=5.00, D=11.29, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ TPC Group: u=-0.00, v=5.00, D=11.29, Q=0.000260
+  ✓ INEOS Phenol: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-0.00, v=5.00, D=11.29, Q=0.000320
+  ✓ BASF Pasadena: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ Huntsman International: u=-0.00, v=5.00, D=11.29, Q=0.000280
+  ✓ Invista: u=-0.00, v=5.00, D=11.29, Q=0.000200
+  ✓ Goodyear Baytown: u=-0.00, v=5.00, D=11.29, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.00, v=5.00, D=11.29, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-0.00, v=5.00, D=11.29, Q=0.000240
+  ✓ K-Solv Channelview: u=-0.00, v=5.00, D=11.29, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000220
+  ✓ ITC Deer Park: u=-0.00, v=5.00, D=11.29, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-0.00, v=5.00, D=11.29, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 21:00:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=77.8349, max=9054.9083 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -624.67 to 293.99 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=0.0000, max=9054.9083 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_2100.png
+    NN2:  nn2_2026-02-01_2100.png
+    ✓ Sensor-bounded: max PINN=3198.9, max NN2=3198.9 ppb
+  ✓ Correction stats:
+    Mean correction: -15.19 ppb
+    Correction range: [-478.70, 384.06] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 77.8349 - 9054.9083 ppb
+  NN2 range: 0.0000 - 9054.9083 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 18:21:00
+Sleeping for 897 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 18:15
+Forecast for: 2026-02-01 21:15 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 18:00 UTC
+  ✓ MGPT2: wind=17.7 m/s, temp=279.3 K
+  ✓ F1563: wind=4.8 m/s, temp=282.0 K
+  ✗ C4814 failed: 404 Client Error: Not Found for url: https://api.weather.gov/stations/C4814/observations/latest
+  ✓ D1774: wind=3.2 m/s, temp=280.9 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 18:15
+  Forecast time: 2026-02-01 21:15 (t+3hr)
+  ✓ ExxonMobil Baytown Refinery: u=-15.49, v=8.59, D=40.00, Q=0.000800
+  ✓ Shell Deer Park Refinery: u=-4.05, v=2.63, D=10.90, Q=0.000700
+  ✓ Valero Houston Refinery: u=-4.05, v=2.63, D=10.90, Q=0.000600
+  ✓ LyondellBasell Pasadena Comple: u=-4.05, v=2.63, D=10.90, Q=0.000500
+  ⚠ LyondellBasell Channelview Complex: Station C4814 not available, skipping
+  ✓ ExxonMobil Baytown Olefins Pla: u=-15.49, v=8.59, D=40.00, Q=0.000360
+  ✓ Chevron Phillips Chemical Co: u=-4.05, v=2.63, D=10.90, Q=0.000300
+  ✓ TPC Group: u=-4.05, v=2.63, D=10.90, Q=0.000260
+  ✓ INEOS Phenol: u=-4.05, v=2.63, D=10.90, Q=0.000240
+  ✓ Total Energies Petrochemicals: u=-15.49, v=8.59, D=40.00, Q=0.000320
+  ✓ BASF Pasadena: u=-4.05, v=2.63, D=10.90, Q=0.000240
+  ✓ Huntsman International: u=-4.05, v=2.63, D=10.90, Q=0.000280
+  ✓ Invista: u=-4.05, v=2.63, D=10.90, Q=0.000200
+  ✓ Goodyear Baytown: u=-15.49, v=8.59, D=40.00, Q=0.000120
+  ✓ LyondellBasell Bayport Polymer: u=-0.28, v=3.19, D=7.24, Q=0.000300
+  ✓ INEOS PP & Gemini: u=-15.49, v=8.59, D=40.00, Q=0.000240
+  ✓ K-Solv Channelview: u=-4.05, v=2.63, D=10.90, Q=0.000180
+  ✓ Oxy Vinyls Deer Park: u=-4.05, v=2.63, D=10.90, Q=0.000220
+  ✓ ITC Deer Park: u=-15.49, v=8.59, D=40.00, Q=0.000100
+  ✓ Enterprise Houston Terminal: u=-4.05, v=2.63, D=10.90, Q=0.000080
+  Appended data for 19/20 facilities
+
+
+[3/4] Computing PINN+NN2 predictions...
+[Concentration Predictor] Predicting for 2026-02-01 21:15:00
+  Computing PINN for 19 facilities...
+  PINN superposition: min=146.8470, max=60766.9791 ppb
+  Applying NN2 correction...
+    Sensor corrections range: -23350.32 to 14281.04 ppb
+    Confidence weighting: 235/900 points with >50% confidence
+    Mean confidence: 0.26
+  NN2 corrected: min=146.8470, max=54319.9194 ppb
+  Generating visualizations...
+  ✓ Saved visualizations:
+    PINN: pinn_2026-02-01_2115.png
+    NN2:  nn2_2026-02-01_2115.png
+    ✓ Sensor-bounded: max PINN=60767.0, max NN2=54319.9 ppb
+  ✓ Correction stats:
+    Mean correction: 61.39 ppb
+    Correction range: [-20810.41, 11608.40] ppb
+  ✓ Appended 900 rows to continuous CSVs
+  ✓ Saved latest snapshot: latest_spatial_grid.csv
+
+[4/4] Pipeline complete
+  PINN range: 146.8470 - 60766.9791 ppb
+  NN2 range: 146.8470 - 54319.9194 ppb
+
+======================================================================
+✓ PIPELINE RUN SUCCESSFUL
+======================================================================
+
+Next run scheduled for: 18:35:00
+Sleeping for 838 seconds...
+
+======================================================================
+PIPELINE RUN: 2026-02-01 18:30
+Forecast for: 2026-02-01 21:30 (t+3hr)
+======================================================================
+
+[1/4] Fetching MADIS meteorological data...
+Fetching weather data for 2026-02-01 18:00 UTC
+  ✗ MGPT2 failed: Could not find a suitable TLS CA certificate bundle, invalid path: /Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/certifi/cacert.pem
+  ✗ F1563 failed: Could not find a suitable TLS CA certificate bundle, invalid path: /Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/certifi/cacert.pem
+  ✗ C4814 failed: Could not find a suitable TLS CA certificate bundle, invalid path: /Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/certifi/cacert.pem
+  ✗ D1774 failed: Could not find a suitable TLS CA certificate bundle, invalid path: /Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/certifi/cacert.pem
+  Failed to fetch from NWS API, using mock data
+  ✓ MOCK MGPT2: wind=6.6 m/s @ 227°, temp=284.7 K
+  ✓ MOCK F1563: wind=4.9 m/s @ 40°, temp=291.2 K
+  ✓ MOCK C4814: wind=7.9 m/s @ 265°, temp=292.5 K
+  ✓ MOCK D1774: wind=7.1 m/s @ 178°, temp=293.5 K
+
+[2/4] Generating facility-specific data...
+
+[CSV Generator] Processing 20 facilities
+  Current time: 2026-02-01 18:30
+  Forecast time: 2026-02-01 21:30 (t+3hr)
+
+✗ ERROR: Pipeline failed: Cannot save file into a non-existent directory: '/Users/neevpratap/Desktop/realtime/data/continuous/per_facility'
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 83, in run_once
+  File "/Users/neevpratap/Desktop/realtime/csv_generator.py", line 111, in append_facility_data
+  File "/Users/neevpratap/Desktop/realtime/csv_generator.py", line 137, in _append_to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/core/generic.py", line 3988, in to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/formats/format.py", line 1025, in to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/formats/csvs.py", line 251, in save
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/common.py", line 793, in get_handle
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/common.py", line 652, in check_parent_directory
+OSError: Cannot save file into a non-existent directory: '/Users/neevpratap/Desktop/realtime/data/continuous/per_facility'
+
+
+✗ ERROR: Continuous mode error: [Errno 2] No such file or directory: '/Users/neevpratap/Desktop/realtime/logs/pipeline.log'
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 83, in run_once
+  File "/Users/neevpratap/Desktop/realtime/csv_generator.py", line 111, in append_facility_data
+  File "/Users/neevpratap/Desktop/realtime/csv_generator.py", line 137, in _append_to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/core/generic.py", line 3988, in to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/formats/format.py", line 1025, in to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/formats/csvs.py", line 251, in save
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/common.py", line 793, in get_handle
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/common.py", line 652, in check_parent_directory
+OSError: Cannot save file into a non-existent directory: '/Users/neevpratap/Desktop/realtime/data/continuous/per_facility'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 131, in run_continuous
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 112, in run_once
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 184, in _log_error
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/neevpratap/Desktop/realtime/logs/pipeline.log'
+
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 83, in run_once
+  File "/Users/neevpratap/Desktop/realtime/csv_generator.py", line 111, in append_facility_data
+  File "/Users/neevpratap/Desktop/realtime/csv_generator.py", line 137, in _append_to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/core/generic.py", line 3988, in to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/formats/format.py", line 1025, in to_csv
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/formats/csvs.py", line 251, in save
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/common.py", line 793, in get_handle
+  File "/Users/neevpratap/simpletesting/venv/lib/python3.13/site-packages/pandas/io/common.py", line 652, in check_parent_directory
+OSError: Cannot save file into a non-existent directory: '/Users/neevpratap/Desktop/realtime/data/continuous/per_facility'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 131, in run_continuous
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 112, in run_once
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 184, in _log_error
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/neevpratap/Desktop/realtime/logs/pipeline.log'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 262, in <module>
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 258, in main
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 155, in run_continuous
+  File "/Users/neevpratap/Desktop/realtime/realtime_pipeline.py", line 184, in _log_error
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/neevpratap/Desktop/realtime/logs/pipeline.log'

@@ -13,10 +13,12 @@ import pandas as pd
 import numpy as np
 import torch
 import pickle
+from scipy.interpolate import Rbf
 
 # Add paths
 sys.path.append(str(Path(__file__).parent))
 sys.path.append("/Users/neevpratap/simpletesting")
+sys.path.append(str(Path(__file__).parent / 'simpletesting'))
 
 from config import FACILITIES, BASE_DIR, CONTINUOUS_DIR, PREDICTIONS_DIR, VISUALIZATIONS_DIR, CORRECTIONS_DIR
 from pinn import ParametricADEPINN
@@ -41,9 +43,11 @@ class ConcentrationPredictor:
         self.visualizer = PipelineVisualizer(VISUALIZATIONS_DIR, CORRECTIONS_DIR)
         
         # Model paths
-        self.pinn_path = "/Users/neevpratap/simpletesting/pinn_combined_final.pth 2"
-        self.nn2_path = "/Users/neevpratap/simpletesting/nn2_master_model_spatial.pth"
-        self.nn2_scalers_path = "/Users/neevpratap/simpletesting/nn2_master_scalers.pkl"
+        self.pinn_path = "/Users/neevpratap/Downloads/pinn_combined_final2.pth"
+        
+        # Updated NN2 paths - using Phase 1.5 balanced model
+        self.nn2_path = "/Users/neevpratap/Desktop/benzenepipelinev2/realtime/nn2_balanced_model/nn2_master_model_ppb_balanced.pth"
+        self.nn2_scalers_path = "/Users/neevpratap/Desktop/benzenepipelinev2/realtime/nn2_balanced_model/nn2_master_scalers_balanced.pkl"
         
         # Load models
         print("[Concentration Predictor] Loading models...")
@@ -99,15 +103,102 @@ class ConcentrationPredictor:
             # Load checkpoint
             checkpoint = torch.load(self.nn2_path, map_location='cpu', weights_only=False)
             
-            # Load model
-            from nn2 import NN2_CorrectionNetwork
-            nn2 = NN2_CorrectionNetwork(n_sensors=9)
+            # Get scaler parameters from checkpoint
+            scaler_mean = checkpoint.get('scaler_mean', None)
+            scaler_scale = checkpoint.get('scaler_scale', None)
+            output_ppb = checkpoint.get('output_ppb', True)
+            architecture = checkpoint.get('architecture', None)
+            
+            # Check model architecture and load appropriate model
+            if architecture == 'balanced':
+                print("  ✓ Detected Phase 1.5 balanced model (36→64→16→9)")
+                # Import model components
+                nn2_model_dir = Path(__file__).parent / 'drive-download-20260202T042428Z-3-001'
+                if nn2_model_dir.exists():
+                    if str(nn2_model_dir) not in sys.path:
+                        sys.path.insert(0, str(nn2_model_dir))
+                from nn2_model_only import InverseTransformLayer
+                import torch.nn as nn
+                
+                # Create balanced model class inline
+                class BalancedNN2_CorrectionNetwork(nn.Module):
+                    """Balanced NN2 model: 36 → 64 → 16 → 9"""
+                    def __init__(self, n_sensors=9, scaler_mean=None, scaler_scale=None, output_ppb=True):
+                        super().__init__()
+                        self.n_sensors = n_sensors
+                        self.output_ppb = output_ppb
+                        self.correction_network = nn.Sequential(
+                            nn.Linear(36, 64),
+                            nn.BatchNorm1d(64),
+                            nn.ReLU(),
+                            nn.Dropout(0.3),
+                            nn.Linear(64, 16),
+                            nn.BatchNorm1d(16),
+                            nn.ReLU(),
+                            nn.Dropout(0.2),
+                            nn.Linear(16, n_sensors)
+                        )
+                        if output_ppb and scaler_mean is not None and scaler_scale is not None:
+                            self.inverse_transform = InverseTransformLayer(scaler_mean, scaler_scale)
+                        else:
+                            self.inverse_transform = None
+                    
+                    def forward(self, pinn_predictions, sensor_coords, wind, diffusion, temporal):
+                        batch_size = pinn_predictions.shape[0]
+                        coords_flat = sensor_coords.reshape(batch_size, -1)
+                        features = torch.cat([
+                            pinn_predictions, coords_flat, wind, diffusion, temporal
+                        ], dim=-1)
+                        corrections = self.correction_network(features)
+                        corrected_scaled = pinn_predictions + corrections
+                        if self.inverse_transform is not None:
+                            corrected_ppb = self.inverse_transform(corrected_scaled)
+                            return corrected_ppb, corrections
+                        else:
+                            return corrected_scaled, corrections
+                
+                nn2 = BalancedNN2_CorrectionNetwork(
+                    n_sensors=9,
+                    scaler_mean=scaler_mean,
+                    scaler_scale=scaler_scale,
+                    output_ppb=output_ppb
+                )
+            else:
+                # Fallback to standard model
+                nn2_model_dir = Path(__file__).parent / 'drive-download-20260202T042428Z-3-001'
+                if nn2_model_dir.exists():
+                    if str(nn2_model_dir) not in sys.path:
+                        sys.path.insert(0, str(nn2_model_dir))
+                from nn2_model_only import NN2_CorrectionNetwork
+                nn2 = NN2_CorrectionNetwork(
+                    n_sensors=9,
+                    scaler_mean=scaler_mean,
+                    scaler_scale=scaler_scale,
+                    output_ppb=output_ppb
+                )
+            
             nn2.load_state_dict(checkpoint['model_state_dict'])
             nn2.eval()
             
-            # Load scalers from checkpoint
-            scalers = checkpoint['scalers']
-            sensor_coords = checkpoint['sensor_coords']
+            # Load scalers from separate file
+            with open(self.nn2_scalers_path, 'rb') as f:
+                scalers = pickle.load(f)
+            
+            # Get sensor coordinates from checkpoint or use default
+            sensor_coords = checkpoint.get('sensor_coords', None)
+            if sensor_coords is None:
+                # Default sensor coordinates
+                sensor_coords = np.array([
+                    [13972.62, 19915.57],  # 482010026
+                    [3017.18, 12334.2],    # 482010057
+                    [817.42, 9218.92],     # 482010069
+                    [27049.57, 22045.66],  # 482010617
+                    [8836.35, 15717.2],    # 482010803
+                    [18413.8, 15068.96],   # 482011015
+                    [1159.98, 12272.52],   # 482011035
+                    [13661.93, 5193.24],   # 482011039
+                    [1546.9, 6786.33],     # 482016000
+                ])
             
             print("  ✓ NN2 model loaded with scalers")
             
@@ -115,6 +206,8 @@ class ConcentrationPredictor:
             
         except Exception as e:
             print(f"  ✗ Failed to load NN2: {e}")
+            import traceback
+            traceback.print_exc()
             print("  Falling back to simplified correction")
             return None, None, None
     
@@ -150,8 +243,11 @@ class ConcentrationPredictor:
         print(f"[Concentration Predictor] Predicting for {forecast_time}")
         print(f"  Computing PINN for {len(facility_params)} facilities...")
         
-        # Calculate time in hours since ref
-        t_hours = (forecast_time - self.t_start).total_seconds() / 3600.0
+        # FIXED: Use simulation time t=3.0 hours (not absolute calendar time)
+        # Each scenario starts at t=0, predicts at t=3 hours for 3-hour forecast
+        # This makes PINN truly steady-state - only wind/diffusion/emissions affect predictions
+        FORECAST_T_HOURS = 3.0  # Simulation time for 3-hour forecast
+        t_hours = FORECAST_T_HOURS
         
         # Accumulate plumes from all facilities
         total_pinn_field = np.zeros(len(self.x_flat))
@@ -227,9 +323,17 @@ class ConcentrationPredictor:
         """
         Compute PINN predictions for single facility across grid
         
+        FIXED: Uses simulation time t=3.0 hours (not absolute calendar time).
+        Each scenario starts at t=0, predicts at t=3 hours for 3-hour forecast.
+        This matches training data generation and removes PINN time dependency bug.
+        
         Returns:
             Array of concentrations in ppb
         """
+        # FIX: Use simulation time instead of absolute calendar time (matches training data)
+        FORECAST_T_HOURS = 3.0  # Simulation time for 3-hour forecast (each scenario resets to t=0)
+        t_simulation = FORECAST_T_HOURS
+        
         n_points = len(x)
         concentrations = np.zeros(n_points)
         
@@ -245,7 +349,7 @@ class ConcentrationPredictor:
             # Create tensors
             x_t = torch.tensor(batch_x.reshape(-1, 1), dtype=torch.float32)
             y_t = torch.tensor(batch_y.reshape(-1, 1), dtype=torch.float32)
-            t_t = torch.full((batch_size_actual, 1), t, dtype=torch.float32)
+            t_t = torch.full((batch_size_actual, 1), t_simulation, dtype=torch.float32)  # Use simulation time
             cx_t = torch.full((batch_size_actual, 1), source_x, dtype=torch.float32)
             cy_t = torch.full((batch_size_actual, 1), source_y, dtype=torch.float32)
             u_t = torch.full((batch_size_actual, 1), wind_u, dtype=torch.float32)
@@ -259,8 +363,9 @@ class ConcentrationPredictor:
                 phi = self.pinn(x_t, y_t, t_t, cx_t, cy_t, u_t, v_t, 
                                d_t, kappa_t, Q_t, normalize=True)
             
-            # Convert to ppb
-            concentrations[i:end_idx] = np.maximum(phi.numpy().flatten() * 3.13e8, 0.0)
+            # Convert to ppb (using same conversion factor as training data)
+            UNIT_CONVERSION_FACTOR = 313210039.9  # kg/m^2 to ppb (matches training data)
+            concentrations[i:end_idx] = np.maximum(phi.numpy().flatten() * UNIT_CONVERSION_FACTOR, 0.0)
         
         return concentrations
     
@@ -279,25 +384,59 @@ class ConcentrationPredictor:
             print("    Using simplified correction (20% reduction)")
             return np.maximum(pinn_pred * 0.8, 0.0)
         
-        # Define 9 sensor locations (Cartesian coordinates - CORRECT values from training)
+        # Define 9 sensor locations (Cartesian coordinates - EXACT values from training data generation)
+        # These match the SENSORS dict in regenerate_training_data_correct_pinn.py
         SENSOR_COORDS = np.array([
             [13972.62, 19915.57],  # 482010026
             [3017.18, 12334.2],    # 482010057
             [817.42, 9218.92],     # 482010069
+            [27049.57, 22045.66],  # 482010617 (FIXED - was missing)
             [8836.35, 15717.2],    # 482010803
             [18413.8, 15068.96],   # 482011015
             [1159.98, 12272.52],   # 482011035
             [13661.93, 5193.24],   # 482011039
-            [15077.79, 9450.52],   # 482011614
             [1546.9, 6786.33],     # 482016000
         ])
         
-        # Step 1: Interpolate PINN field to get values at sensor locations
-        from scipy.interpolate import Rbf
+        # Step 1: Compute PINN at sensor locations using EXACT same method as training data
+        # Instead of interpolating, compute directly at sensor locations for each facility
+        # This matches the training data generation method exactly
         
-        # Create RBF interpolator for PINN field
-        pinn_rbf = Rbf(x, y, pinn_pred, function='multiquadric', smooth=0.1)
-        sensor_pinn = pinn_rbf(SENSOR_COORDS[:, 0], SENSOR_COORDS[:, 1])
+        # Compute PINN at sensor locations for each facility and superimpose
+        sensor_pinn = np.zeros(len(SENSOR_COORDS))
+        FORECAST_T_HOURS = 3.0  # Simulation time (matches training data)
+        UNIT_CONVERSION_FACTOR = 313210039.9  # kg/m^2 to ppb (matches training data)
+        
+        for facility_name, params in facility_params.items():
+            # Use correct keys from facility_params structure
+            source_x = params.get('source_x_cartesian', params.get('source_x', 0.0))
+            source_y = params.get('source_y_cartesian', params.get('source_y', 0.0))
+            source_d = params.get('source_diameter', 0.0)
+            Q = params.get('Q_total', params.get('Q', 0.0))
+            wind_u = params.get('wind_u', 0.0)
+            wind_v = params.get('wind_v', 0.0)
+            D = params.get('D', 0.0)
+            
+            # Compute PINN at each sensor location for this facility
+            for i, (sx, sy) in enumerate(SENSOR_COORDS):
+                with torch.no_grad():
+                    phi_raw = self.pinn(
+                        torch.tensor([[sx]], dtype=torch.float32),
+                        torch.tensor([[sy]], dtype=torch.float32),
+                        torch.tensor([[FORECAST_T_HOURS]], dtype=torch.float32),  # Simulation time
+                        torch.tensor([[source_x]], dtype=torch.float32),
+                        torch.tensor([[source_y]], dtype=torch.float32),
+                        torch.tensor([[wind_u]], dtype=torch.float32),
+                        torch.tensor([[wind_v]], dtype=torch.float32),
+                        torch.tensor([[source_d]], dtype=torch.float32),
+                        torch.tensor([[D]], dtype=torch.float32),
+                        torch.tensor([[Q]], dtype=torch.float32),
+                        normalize=True
+                    )
+                    
+                    # Convert to ppb and superimpose
+                    concentration_ppb = phi_raw.item() * UNIT_CONVERSION_FACTOR
+                    sensor_pinn[i] += concentration_ppb
         
         # Step 2: Apply NN2 correction at sensor locations
         avg_u = np.mean([p['wind_u'] for p in facility_params.values()])
@@ -319,12 +458,19 @@ class ConcentrationPredictor:
             month / 12.0
         ]])
         
-        # Use dummy current sensor values (we don't have actual sensor readings)
-        current_sensors = sensor_pinn.copy()
+        # FIXED: Remove current_sensors - model architecture was updated to remove this input (data leakage fix)
+        # The new model expects only: pinn_predictions, sensor_coords, wind, diffusion, temporal
         
-        # Scale inputs
-        p_s = self.scalers['pinn'].transform(sensor_pinn.reshape(-1, 1)).reshape(1, -1)
-        s_s = self.scalers['sensors'].transform(current_sensors.reshape(-1, 1)).reshape(1, -1)
+        # Scale inputs - handle zeros the same way as training (mask before scaling)
+        pinn_nonzero_mask = sensor_pinn != 0.0
+        
+        # Scale PINN predictions (only non-zero values)
+        p_s = np.zeros_like(sensor_pinn)
+        if pinn_nonzero_mask.any():
+            p_s[pinn_nonzero_mask] = self.scalers['pinn'].transform(
+                sensor_pinn[pinn_nonzero_mask].reshape(-1, 1)
+            ).flatten()
+        p_s = p_s.reshape(1, -1)
         
         w_in = np.array([[avg_u, avg_v]])
         w_s = self.scalers['wind'].transform(w_in)
@@ -335,22 +481,24 @@ class ConcentrationPredictor:
         c_s = self.scalers['coords'].transform(self.sensor_coords_spatial)
         
         # Convert to tensors
+        # FIXED: Removed s_tensor (current_sensors) - not part of new model architecture
         p_tensor = torch.tensor(p_s, dtype=torch.float32)
-        s_tensor = torch.tensor(s_s, dtype=torch.float32)
         c_tensor = torch.tensor(c_s, dtype=torch.float32).unsqueeze(0)
         w_tensor = torch.tensor(w_s, dtype=torch.float32)
         d_tensor = torch.tensor(d_s, dtype=torch.float32)
         t_tensor = torch.tensor(temporal_vals, dtype=torch.float32)
         
-        # Run NN2 to get corrected values at sensors
+        # FIXED: Model call - correct order and number of arguments
+        # Model signature: forward(pinn_predictions, sensor_coords, wind, diffusion, temporal)
+        # Model outputs directly in ppb space (output_ppb=True), so use output directly
         with torch.no_grad():
-            corrected_scaled, _ = self.nn2(s_tensor, p_tensor, c_tensor, w_tensor, d_tensor, t_tensor)
+            corrected_ppb, _ = self.nn2(p_tensor, c_tensor, w_tensor, d_tensor, t_tensor)
         
-        # Inverse transform to get corrected concentrations
-        corrected_scaled_np = corrected_scaled.cpu().numpy().flatten()
-        sensor_corrected = self.scalers['sensors'].inverse_transform(
-            corrected_scaled_np.reshape(-1, 1)
-        ).flatten()
+        # FIXED: Model outputs directly in ppb space, no inverse transform needed
+        sensor_corrected = corrected_ppb.cpu().numpy().flatten()
+        
+        # Clip negative values (concentrations cannot be negative)
+        sensor_corrected = np.maximum(sensor_corrected, 0.0)
         
         # Step 3: Calculate correction field at sensors (NN2 - PINN)
         sensor_corrections = sensor_corrected - sensor_pinn
