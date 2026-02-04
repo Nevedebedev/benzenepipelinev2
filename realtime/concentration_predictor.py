@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Concentration Predictor for Real-Time Pipeline
-Computes PINN+NN2 predictions across full Houston domain
+Computes PINN+Kalman filter predictions across full Houston domain
 Appends predictions to continuous time series CSVs
 """
 
@@ -26,9 +26,9 @@ from visualizer import PipelineVisualizer
 
 
 class ConcentrationPredictor:
-    """Predict benzene concentrations using PINN+NN2 across full domain"""
+    """Predict benzene concentrations using PINN+Kalman filter across full domain"""
     
-    def __init__(self, grid_resolution: int = 100):
+    def __init__(self, grid_resolution: int = 100, use_kalman: bool = True):
         self.grid_resolution = grid_resolution
         self.device = 'cpu'
         
@@ -45,14 +45,37 @@ class ConcentrationPredictor:
         # Model paths
         self.pinn_path = "/Users/neevpratap/Downloads/pinn_combined_final2.pth"
         
-        # Updated NN2 paths - using Phase 1.5 balanced model
-        self.nn2_path = "/Users/neevpratap/Desktop/benzenepipelinev2/realtime/nn2_balanced_model/nn2_master_model_ppb_balanced.pth"
-        self.nn2_scalers_path = "/Users/neevpratap/Desktop/benzenepipelinev2/realtime/nn2_balanced_model/nn2_master_scalers_balanced.pkl"
-        
         # Load models
         print("[Concentration Predictor] Loading models...")
         self.pinn = self._load_pinn()
-        self.nn2, self.scalers, self.sensor_coords_spatial = self._load_nn2()
+        print("  ✓ PINN model loaded")
+        
+        # Initialize Kalman filter
+        self.use_kalman = use_kalman
+        if use_kalman:
+            import json
+            param_file = Path("realtime/data/kalman_parameters.json")
+            if param_file.exists():
+                with open(param_file, 'r') as f:
+                    kf_params = json.load(f)
+                    # Filter to only parameters (exclude metrics)
+                    kf_params = {k: v for k, v in kf_params.items() 
+                                if k in ['process_noise', 'measurement_noise', 
+                                        'decay_rate', 'pinn_weight']}
+            else:
+                # Default parameters
+                kf_params = {
+                    'process_noise': 1.0,
+                    'measurement_noise': 0.01,
+                    'decay_rate': 0.7,
+                    'pinn_weight': 0.3
+                }
+                print(f"  ⚠ No tuned parameters found, using defaults: {kf_params}")
+            
+            from kalman_filter import BenzeneKalmanFilter
+            self.kalman_filter = BenzeneKalmanFilter(**kf_params)
+            print(f"  ✓ Kalman filter initialized with params: {kf_params}")
+        
         print("  ✓ Models loaded\n")
         
         # Reference time for PINN
@@ -95,122 +118,6 @@ class ConcentrationPredictor:
         pinn.eval()
         return pinn
     
-    def _load_nn2(self):
-        """Load NN2 model with embedded scalers from checkpoint"""
-        try:
-            print("  Loading NN2 model with scalers...")
-            
-            # Load checkpoint
-            checkpoint = torch.load(self.nn2_path, map_location='cpu', weights_only=False)
-            
-            # Get scaler parameters from checkpoint
-            scaler_mean = checkpoint.get('scaler_mean', None)
-            scaler_scale = checkpoint.get('scaler_scale', None)
-            output_ppb = checkpoint.get('output_ppb', True)
-            architecture = checkpoint.get('architecture', None)
-            
-            # Check model architecture and load appropriate model
-            if architecture == 'balanced':
-                print("  ✓ Detected Phase 1.5 balanced model (36→64→16→9)")
-                # Import model components
-                nn2_model_dir = Path(__file__).parent / 'drive-download-20260202T042428Z-3-001'
-                if nn2_model_dir.exists():
-                    if str(nn2_model_dir) not in sys.path:
-                        sys.path.insert(0, str(nn2_model_dir))
-                from nn2_model_only import InverseTransformLayer
-                import torch.nn as nn
-                
-                # Create balanced model class inline
-                class BalancedNN2_CorrectionNetwork(nn.Module):
-                    """Balanced NN2 model: 36 → 64 → 16 → 9"""
-                    def __init__(self, n_sensors=9, scaler_mean=None, scaler_scale=None, output_ppb=True):
-                        super().__init__()
-                        self.n_sensors = n_sensors
-                        self.output_ppb = output_ppb
-                        self.correction_network = nn.Sequential(
-                            nn.Linear(36, 64),
-                            nn.BatchNorm1d(64),
-                            nn.ReLU(),
-                            nn.Dropout(0.3),
-                            nn.Linear(64, 16),
-                            nn.BatchNorm1d(16),
-                            nn.ReLU(),
-                            nn.Dropout(0.2),
-                            nn.Linear(16, n_sensors)
-                        )
-                        if output_ppb and scaler_mean is not None and scaler_scale is not None:
-                            self.inverse_transform = InverseTransformLayer(scaler_mean, scaler_scale)
-                        else:
-                            self.inverse_transform = None
-                    
-                    def forward(self, pinn_predictions, sensor_coords, wind, diffusion, temporal):
-                        batch_size = pinn_predictions.shape[0]
-                        coords_flat = sensor_coords.reshape(batch_size, -1)
-                        features = torch.cat([
-                            pinn_predictions, coords_flat, wind, diffusion, temporal
-                        ], dim=-1)
-                        corrections = self.correction_network(features)
-                        corrected_scaled = pinn_predictions + corrections
-                        if self.inverse_transform is not None:
-                            corrected_ppb = self.inverse_transform(corrected_scaled)
-                            return corrected_ppb, corrections
-                        else:
-                            return corrected_scaled, corrections
-                
-                nn2 = BalancedNN2_CorrectionNetwork(
-                    n_sensors=9,
-                    scaler_mean=scaler_mean,
-                    scaler_scale=scaler_scale,
-                    output_ppb=output_ppb
-                )
-            else:
-                # Fallback to standard model
-                nn2_model_dir = Path(__file__).parent / 'drive-download-20260202T042428Z-3-001'
-                if nn2_model_dir.exists():
-                    if str(nn2_model_dir) not in sys.path:
-                        sys.path.insert(0, str(nn2_model_dir))
-                from nn2_model_only import NN2_CorrectionNetwork
-                nn2 = NN2_CorrectionNetwork(
-                    n_sensors=9,
-                    scaler_mean=scaler_mean,
-                    scaler_scale=scaler_scale,
-                    output_ppb=output_ppb
-                )
-            
-            nn2.load_state_dict(checkpoint['model_state_dict'])
-            nn2.eval()
-            
-            # Load scalers from separate file
-            with open(self.nn2_scalers_path, 'rb') as f:
-                scalers = pickle.load(f)
-            
-            # Get sensor coordinates from checkpoint or use default
-            sensor_coords = checkpoint.get('sensor_coords', None)
-            if sensor_coords is None:
-                # Default sensor coordinates
-                sensor_coords = np.array([
-                    [13972.62, 19915.57],  # 482010026
-                    [3017.18, 12334.2],    # 482010057
-                    [817.42, 9218.92],     # 482010069
-                    [27049.57, 22045.66],  # 482010617
-                    [8836.35, 15717.2],    # 482010803
-                    [18413.8, 15068.96],   # 482011015
-                    [1159.98, 12272.52],   # 482011035
-                    [13661.93, 5193.24],   # 482011039
-                    [1546.9, 6786.33],     # 482016000
-                ])
-            
-            print("  ✓ NN2 model loaded with scalers")
-            
-            return nn2, scalers, sensor_coords
-            
-        except Exception as e:
-            print(f"  ✗ Failed to load NN2: {e}")
-            import traceback
-            traceback.print_exc()
-            print("  Falling back to simplified correction")
-            return None, None, None
-    
     def _create_grid(self):
         """Create spatial grid for domain predictions"""
         x_grid = np.linspace(0, 30000, self.grid_resolution)
@@ -226,7 +133,8 @@ class ConcentrationPredictor:
     def predict_full_domain(
         self,
         facility_params: dict,
-        current_time: datetime
+        current_time: datetime,
+        current_sensor_readings: np.ndarray = None
     ) -> tuple:
         """
         Predict concentrations across full domain for t+3 hours
@@ -274,46 +182,53 @@ class ConcentrationPredictor:
         
         print(f"  PINN superposition: min={total_pinn_field.min():.4f}, max={total_pinn_field.max():.4f} ppb")
         
-        # Apply NN2 correction across entire field
-        print(f"  Applying NN2 correction...")
-        nn2_field = self._apply_nn2_correction(
-            self.x_flat, self.y_flat, total_pinn_field, facility_params, forecast_time
-        )
+        # Apply Kalman filter correction across entire field
+        if self.use_kalman and current_sensor_readings is not None:
+            print(f"  Applying Kalman filter correction...")
+            kalman_field = self._apply_kalman_correction(
+                self.x_flat, self.y_flat, total_pinn_field, facility_params, forecast_time, current_sensor_readings
+            )
+            print(f"  Kalman corrected: min={kalman_field.min():.4f}, max={kalman_field.max():.4f} ppb")
+        else:
+            # No correction - use PINN only
+            kalman_field = total_pinn_field.copy()
+            print(f"  No correction applied (Kalman disabled or no sensor readings)")
         
-        print(f"  NN2 corrected: min={nn2_field.min():.4f}, max={nn2_field.max():.4f} ppb")
+        # For backward compatibility, use kalman_field as the corrected field
+        corrected_field = kalman_field
         
         # Extract predictions at sensor locations for validation
-        self._log_sensor_predictions(self.x_flat, self.y_flat, total_pinn_field, nn2_field, forecast_time)
+        self._log_sensor_predictions(self.x_flat, self.y_flat, total_pinn_field, corrected_field, forecast_time)
         
         # Generate visualizations
         print(f"  Generating visualizations...")
         self.visualizer.generate_heatmaps(
             self.x_flat, self.y_flat,
-            total_pinn_field, nn2_field,
+            total_pinn_field, corrected_field,
             forecast_time, self.grid_resolution
         )
         
         # Save correction statistics
         self.visualizer.save_correction_stats(
             current_time, forecast_time,
-            total_pinn_field, nn2_field
+            total_pinn_field, corrected_field
         )
         
         # Append to continuous CSVs
         self._append_domain_data(
             current_time, forecast_time,
             self.x_flat, self.y_flat,
-            total_pinn_field, nn2_field
+            total_pinn_field, corrected_field
         )
         
         # Save latest snapshot
         self._save_latest_snapshot(
             forecast_time, 
             self.x_flat, self.y_flat,
-            total_pinn_field, nn2_field
+            total_pinn_field, corrected_field
         )
         
-        return total_pinn_field, nn2_field, forecast_time
+        return total_pinn_field, corrected_field, forecast_time
     
     def _compute_pinn_for_facility(
         self, x, y, t,
@@ -369,38 +284,33 @@ class ConcentrationPredictor:
         
         return concentrations
     
-    def _apply_nn2_correction(self, x, y, pinn_pred, facility_params, forecast_time):
+    def predict_pinn_at_sensors(self, facility_params):
         """
-        Apply NN2 correction efficiently using actual 9 sensor locations
+        Get PINN predictions at 9 sensor locations for given facility parameters.
         
-        1. Compute PINN predictions at 9 sensor locations
-        2. Apply NN2 correction to get corrected values at sensors
-        3. Calculate correction field (NN2 - PINN) at sensors
-        4. Interpolate correction field across entire domain using RBF
-        5. Add interpolated corrections to PINN field
+        Uses existing _compute_pinn_for_facility logic.
+        Processes each facility separately, then superimposes.
+        
+        Args:
+            facility_params: Dictionary of facility parameters (same format as predict_full_domain)
+        
+        Returns:
+            sensor_predictions: Array of PINN predictions at 9 sensors [ppb], shape (9,)
+            Sensor order matches: ['482010026', '482010057', '482010069', '482010617', 
+                                   '482010803', '482011015', '482011035', '482011039', '482016000']
         """
-        if self.nn2 is None or self.scalers is None:
-            # Fall back to simplified correction
-            print("    Using simplified correction (20% reduction)")
-            return np.maximum(pinn_pred * 0.8, 0.0)
-        
         # Define 9 sensor locations (Cartesian coordinates - EXACT values from training data generation)
-        # These match the SENSORS dict in regenerate_training_data_correct_pinn.py
         SENSOR_COORDS = np.array([
             [13972.62, 19915.57],  # 482010026
             [3017.18, 12334.2],    # 482010057
             [817.42, 9218.92],     # 482010069
-            [27049.57, 22045.66],  # 482010617 (FIXED - was missing)
+            [27049.57, 22045.66],  # 482010617
             [8836.35, 15717.2],    # 482010803
             [18413.8, 15068.96],   # 482011015
             [1159.98, 12272.52],   # 482011035
             [13661.93, 5193.24],   # 482011039
             [1546.9, 6786.33],     # 482016000
         ])
-        
-        # Step 1: Compute PINN at sensor locations using EXACT same method as training data
-        # Instead of interpolating, compute directly at sensor locations for each facility
-        # This matches the training data generation method exactly
         
         # Compute PINN at sensor locations for each facility and superimpose
         sensor_pinn = np.zeros(len(SENSOR_COORDS))
@@ -438,72 +348,58 @@ class ConcentrationPredictor:
                     concentration_ppb = phi_raw.item() * UNIT_CONVERSION_FACTOR
                     sensor_pinn[i] += concentration_ppb
         
-        # Step 2: Apply NN2 correction at sensor locations
-        avg_u = np.mean([p['wind_u'] for p in facility_params.values()])
-        avg_v = np.mean([p['wind_v'] for p in facility_params.values()])
-        avg_D = np.mean([p['D'] for p in facility_params.values()])
+        return sensor_pinn
+    
+    def _apply_kalman_correction(self, x, y, pinn_pred, facility_params, forecast_time, current_sensor_readings):
+        """
+        Apply Kalman filter correction efficiently using actual 9 sensor locations
         
-        # Temporal features
-        hour = forecast_time.hour
-        day_of_week = forecast_time.weekday()
-        month = forecast_time.month
-        is_weekend = 1.0 if day_of_week >= 5 else 0.0
+        1. Compute PINN predictions at 9 sensor locations
+        2. Apply Kalman filter to get corrected values at sensors
+        3. Calculate correction field (Kalman - PINN) at sensors
+        4. Interpolate correction field across entire domain using RBF
+        5. Add interpolated corrections to PINN field
+        """
+        if not self.use_kalman or self.kalman_filter is None:
+            # Fall back to PINN only
+            print("    Kalman filter not available, using PINN only")
+            return pinn_pred
         
-        temporal_vals = np.array([[
-            np.sin(2 * np.pi * hour / 24),
-            np.cos(2 * np.pi * hour / 24),
-            np.sin(2 * np.pi * day_of_week / 7),
-            np.cos(2 * np.pi * day_of_week / 7),
-            is_weekend,
-            month / 12.0
-        ]])
+        # Define 9 sensor locations (Cartesian coordinates - EXACT values from training data generation)
+        SENSOR_COORDS = np.array([
+            [13972.62, 19915.57],  # 482010026
+            [3017.18, 12334.2],    # 482010057
+            [817.42, 9218.92],     # 482010069
+            [27049.57, 22045.66],  # 482010617
+            [8836.35, 15717.2],    # 482010803
+            [18413.8, 15068.96],   # 482011015
+            [1159.98, 12272.52],   # 482011035
+            [13661.93, 5193.24],   # 482011039
+            [1546.9, 6786.33],     # 482016000
+        ])
         
-        # FIXED: Remove current_sensors - model architecture was updated to remove this input (data leakage fix)
-        # The new model expects only: pinn_predictions, sensor_coords, wind, diffusion, temporal
+        # Step 1: Get PINN predictions at sensor locations using helper method
+        sensor_pinn = self.predict_pinn_at_sensors(facility_params)
         
-        # Scale inputs - handle zeros the same way as training (mask before scaling)
-        pinn_nonzero_mask = sensor_pinn != 0.0
+        # Step 2: Apply Kalman filter at sensor locations
+        # current_sensor_readings should be array shape (9,) in sensor ID order
+        if current_sensor_readings is None or len(current_sensor_readings) != 9:
+            print("    Warning: Invalid sensor readings, using PINN only")
+            return pinn_pred
         
-        # Scale PINN predictions (only non-zero values)
-        p_s = np.zeros_like(sensor_pinn)
-        if pinn_nonzero_mask.any():
-            p_s[pinn_nonzero_mask] = self.scalers['pinn'].transform(
-                sensor_pinn[pinn_nonzero_mask].reshape(-1, 1)
-            ).flatten()
-        p_s = p_s.reshape(1, -1)
+        # Kalman forecast
+        kalman_forecast, uncertainty = self.kalman_filter.forecast(
+            current_sensors=current_sensor_readings,
+            pinn_predictions=sensor_pinn,
+            hours_ahead=3,
+            return_uncertainty=True
+        )
         
-        w_in = np.array([[avg_u, avg_v]])
-        w_s = self.scalers['wind'].transform(w_in)
-        
-        d_in = np.array([[avg_D]])
-        d_s = self.scalers['diffusion'].transform(d_in)
-        
-        c_s = self.scalers['coords'].transform(self.sensor_coords_spatial)
-        
-        # Convert to tensors
-        # FIXED: Removed s_tensor (current_sensors) - not part of new model architecture
-        p_tensor = torch.tensor(p_s, dtype=torch.float32)
-        c_tensor = torch.tensor(c_s, dtype=torch.float32).unsqueeze(0)
-        w_tensor = torch.tensor(w_s, dtype=torch.float32)
-        d_tensor = torch.tensor(d_s, dtype=torch.float32)
-        t_tensor = torch.tensor(temporal_vals, dtype=torch.float32)
-        
-        # FIXED: Model call - correct order and number of arguments
-        # Model signature: forward(pinn_predictions, sensor_coords, wind, diffusion, temporal)
-        # Model outputs directly in ppb space (output_ppb=True), so use output directly
-        with torch.no_grad():
-            corrected_ppb, _ = self.nn2(p_tensor, c_tensor, w_tensor, d_tensor, t_tensor)
-        
-        # FIXED: Model outputs directly in ppb space, no inverse transform needed
-        sensor_corrected = corrected_ppb.cpu().numpy().flatten()
-        
-        # Clip negative values (concentrations cannot be negative)
-        sensor_corrected = np.maximum(sensor_corrected, 0.0)
-        
-        # Step 3: Calculate correction field at sensors (NN2 - PINN)
-        sensor_corrections = sensor_corrected - sensor_pinn
+        # Step 3: Calculate correction field at sensors (Kalman - PINN)
+        sensor_corrections = kalman_forecast - sensor_pinn
         
         print(f"    Sensor corrections range: {sensor_corrections.min():.2f} to {sensor_corrections.max():.2f} ppb")
+        print(f"    Uncertainty range: {uncertainty.min():.2f} to {uncertainty.max():.2f} ppb")
         
         # Step 4: Interpolate correction field across domain using RBF
         correction_rbf = Rbf(
@@ -517,7 +413,7 @@ class ConcentrationPredictor:
         # Evaluate at all grid points
         correction_field = correction_rbf(x, y)
         
-        # NEW: Distance-based confidence weighting
+        # Distance-based confidence weighting
         # Calculate distance from each grid point to nearest sensor
         distances_to_sensors = np.zeros(len(x))
         for i in range(len(x)):
@@ -531,8 +427,6 @@ class ConcentrationPredictor:
         confidence = np.clip(confidence, 0.0, 1.0)
         
         # Apply confidence-weighted correction
-        # Near sensors: use full NN2 correction
-        # Far from sensors: use PINN only
         weighted_correction = correction_field * confidence
         
         # Step 5: Apply weighted corrections to PINN field
@@ -550,7 +444,7 @@ class ConcentrationPredictor:
     def _log_sensor_predictions(
         self,
         x_grid, y_grid,
-        pinn_field, nn2_field,
+        pinn_field, corrected_field,
         forecast_time: datetime
     ):
         """
@@ -571,35 +465,35 @@ class ConcentrationPredictor:
         
         from scipy.interpolate import Rbf
         
-        # Create RBF interpolators for PINN and NN2 fields
+        # Create RBF interpolators for PINN and corrected fields
         pinn_rbf = Rbf(x_grid, y_grid, pinn_field, function='multiquadric', smooth=0.1)
-        nn2_rbf = Rbf(x_grid, y_grid, nn2_field, function='multiquadric', smooth=0.1)
+        corrected_rbf = Rbf(x_grid, y_grid, corrected_field, function='multiquadric', smooth=0.1)
         
         print(f"\n  {'='*80}")
         print(f"  PREDICTIONS AT SENSOR LOCATIONS ({forecast_time.strftime('%Y-%m-%d %H:%M')} UTC)")
         print(f"  {'='*80}")
-        print(f"  {'Sensor ID':<12} {'Location (x, y)':<25} {'PINN (ppb)':<12} {'NN2 (ppb)':<12} {'Correction'}")
+        print(f"  {'Sensor ID':<12} {'Location (x, y)':<25} {'PINN (ppb)':<12} {'Corrected (ppb)':<12} {'Correction'}")
         print(f"  {'-'*80}")
         
         pinn_values = []
-        nn2_values = []
+        corrected_values = []
         
         for sensor_id, (sx, sy) in SENSORS.items():
             # Interpolate values at sensor location
             pinn_val = float(pinn_rbf(sx, sy))
-            nn2_val = float(nn2_rbf(sx, sy))
-            correction = nn2_val - pinn_val
+            corrected_val = float(corrected_rbf(sx, sy))
+            correction = corrected_val - pinn_val
             
             pinn_values.append(pinn_val)
-            nn2_values.append(nn2_val)
+            corrected_values.append(corrected_val)
             
-            print(f"  {sensor_id:<12} ({sx:>7.1f}, {sy:>7.1f})   {pinn_val:>8.2f}     {nn2_val:>8.2f}     {correction:>+8.2f}")
+            print(f"  {sensor_id:<12} ({sx:>7.1f}, {sy:>7.1f})   {pinn_val:>8.2f}     {corrected_val:>8.2f}     {correction:>+8.2f}")
         
         print(f"  {'-'*80}")
-        print(f"  {'MEAN':<12} {'':<25} {np.mean(pinn_values):>8.2f}     {np.mean(nn2_values):>8.2f}     {np.mean(nn2_values)-np.mean(pinn_values):>+8.2f}")
-        print(f"  {'MEDIAN':<12} {'':<25} {np.median(pinn_values):>8.2f}     {np.median(nn2_values):>8.2f}     {np.median(nn2_values)-np.median(pinn_values):>+8.2f}")
-        print(f"  {'MAX':<12} {'':<25} {np.max(pinn_values):>8.2f}     {np.max(nn2_values):>8.2f}")
-        print(f"  {'MIN':<12} {'':<25} {np.min(pinn_values):>8.2f}     {np.min(nn2_values):>8.2f}")
+        print(f"  {'MEAN':<12} {'':<25} {np.mean(pinn_values):>8.2f}     {np.mean(corrected_values):>8.2f}     {np.mean(corrected_values)-np.mean(pinn_values):>+8.2f}")
+        print(f"  {'MEDIAN':<12} {'':<25} {np.median(pinn_values):>8.2f}     {np.median(corrected_values):>8.2f}     {np.median(corrected_values)-np.median(pinn_values):>+8.2f}")
+        print(f"  {'MAX':<12} {'':<25} {np.max(pinn_values):>8.2f}     {np.max(corrected_values):>8.2f}")
+        print(f"  {'MIN':<12} {'':<25} {np.min(pinn_values):>8.2f}     {np.min(corrected_values):>8.2f}")
         print(f"  {'='*80}\n")
         
         # Also save to CSV for tracking over time
@@ -612,16 +506,16 @@ class ConcentrationPredictor:
             'pinn_median': np.median(pinn_values),
             'pinn_max': np.max(pinn_values),
             'pinn_min': np.min(pinn_values),
-            'nn2_mean': np.mean(nn2_values),
-            'nn2_median': np.median(nn2_values),
-            'nn2_max': np.max(nn2_values),
-            'nn2_min': np.min(nn2_values),
+            'corrected_mean': np.mean(corrected_values),
+            'corrected_median': np.median(corrected_values),
+            'corrected_max': np.max(corrected_values),
+            'corrected_min': np.min(corrected_values),
         }
         
         # Add individual sensor values
         for i, (sensor_id, (sx, sy)) in enumerate(SENSORS.items()):
             sensor_data[f'sensor_{sensor_id}_pinn'] = pinn_values[i]
-            sensor_data[f'sensor_{sensor_id}_nn2'] = nn2_values[i]
+            sensor_data[f'sensor_{sensor_id}_corrected'] = corrected_values[i]
         
         import pandas as pd
         df = pd.DataFrame([sensor_data])
@@ -634,7 +528,7 @@ class ConcentrationPredictor:
     
     def _append_domain_data(
         self, current_time, forecast_time,
-        x, y, pinn_field, nn2_field
+        x, y, pinn_field, corrected_field
     ):
         """
         Append full domain predictions to continuous time series CSVs
@@ -646,8 +540,8 @@ class ConcentrationPredictor:
             'x': x,
             'y': y,
             'pinn_concentration': pinn_field,
-            'nn2_concentration': nn2_field,
-            'correction': nn2_field - pinn_field
+            'corrected_concentration': corrected_field,
+            'correction': corrected_field - pinn_field
         })
         
         # Append to superimposed concentrations (PINN only)
@@ -660,19 +554,19 @@ class ConcentrationPredictor:
             df_pinn.to_csv(superimposed_path, mode='w', header=True, index=False)
             print(f"    Created: {superimposed_path.name}")
         
-        # Append to NN2-corrected domain
-        nn2_corrected_path = self.output_dir / "nn2_corrected_domain_timeseries.csv"
+        # Append to Kalman-corrected domain
+        kalman_corrected_path = self.output_dir / "kalman_corrected_domain_timeseries.csv"
         
-        if nn2_corrected_path.exists():
-            df.to_csv(nn2_corrected_path, mode='a', header=False, index=False)
+        if kalman_corrected_path.exists():
+            df.to_csv(kalman_corrected_path, mode='a', header=False, index=False)
         else:
-            df.to_csv(nn2_corrected_path, mode='w', header=True, index=False)
-            print(f"    Created: {nn2_corrected_path.name}")
+            df.to_csv(kalman_corrected_path, mode='w', header=True, index=False)
+            print(f"    Created: {kalman_corrected_path.name}")
         
         print(f"  ✓ Appended {len(df)} rows to continuous CSVs")
     
     def _save_latest_snapshot(
-        self, forecast_time, x, y, pinn_field, nn2_field
+        self, forecast_time, x, y, pinn_field, corrected_field
     ):
         """
         Save latest forecast as standalone CSV (overwrite each time)
@@ -682,7 +576,7 @@ class ConcentrationPredictor:
             'x': x,
             'y': y,
             'pinn_concentration': pinn_field,
-            'nn2_concentration': nn2_field
+            'corrected_concentration': corrected_field
         })
         
         snapshot_path = self.predictions_dir / "latest_spatial_grid.csv"
@@ -711,7 +605,7 @@ def test_predictor():
     
     # Predict concentrations
     predictor = ConcentrationPredictor(grid_resolution=50)  # Small grid for testing
-    pinn_field, nn2_field, forecast_time = predictor.predict_full_domain(
+    pinn_field, corrected_field, forecast_time = predictor.predict_full_domain(
         facility_params, current_time
     )
     
@@ -720,7 +614,7 @@ def test_predictor():
     print("="*70)
     print(f"Forecast time: {forecast_time}")
     print(f"PINN field: {pinn_field.min():.4f} - {pinn_field.max():.4f} ppb")
-    print(f"NN2 field: {nn2_field.min():.4f} - {nn2_field.max():.4f} ppb")
+    print(f"Corrected field: {corrected_field.min():.4f} - {corrected_field.max():.4f} ppb")
     print("="*70)
 
 

@@ -1,0 +1,13 @@
+{
+  "period": "January-March 2021",
+  "total_samples": 6139,
+  "pinn_mae_ppb": 0.6028,
+  "kalman_mae_ppb": 0.2424,
+  "improvement_pct": 59.8,
+  "parameters": {
+    "process_noise": 0.1,
+    "measurement_noise": 0.5,
+    "decay_rate": 0.7,
+    "pinn_weight": 0.1
+  }
+}

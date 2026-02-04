@@ -6,9 +6,10 @@ Main orchestrator for continuous prediction system
 Runs every 15 minutes to:
 1. Fetch NOAA MADIS data
 2. Generate facility-specific CSVs
-3. Compute PINN+NN2 predictions across full domain  
-4. Append results to continuous time series
-5. Generate forecast visualization
+3. Get current EDF sensor readings
+4. Compute PINN+Kalman filter predictions across full domain  
+5. Append results to continuous time series
+6. Generate forecast visualization
 """
 
 import os
@@ -87,18 +88,21 @@ class RealtimePipeline:
             if not facility_params:
                 raise ValueError("No facility parameters generated")
             
-            # Step 3: Predict concentrations
-            print("\n[3/4] Computing PINN+NN2 predictions...")
-            pinn_field, nn2_field, _ = self.predictor.predict_full_domain(
-                facility_params, current_time
+            # Step 3: Get current sensor readings (if available)
+            current_sensor_readings = self._get_current_sensor_readings(current_time)
+            
+            # Step 4: Predict concentrations
+            print("\n[3/4] Computing PINN+Kalman predictions...")
+            pinn_field, corrected_field, _ = self.predictor.predict_full_domain(
+                facility_params, current_time, current_sensor_readings=current_sensor_readings
             )
             
-            # Step 4: Log completion
+            # Step 5: Log completion
             print("\n[4/4] Pipeline complete")
             print(f"  PINN range: {pinn_field.min():.4f} - {pinn_field.max():.4f} ppb")
-            print(f"  NN2 range: {nn2_field.min():.4f} - {nn2_field.max():.4f} ppb")
+            print(f"  Kalman range: {corrected_field.min():.4f} - {corrected_field.max():.4f} ppb")
             
-            self._log_success(current_time, forecast_time, pinn_field, nn2_field)
+            self._log_success(current_time, forecast_time, pinn_field, corrected_field)
             
             print("\n" + "="*70)
             print("✓ PIPELINE RUN SUCCESSFUL")
@@ -158,7 +162,77 @@ class RealtimePipeline:
                 print("Waiting 60 seconds before retry...\n")
                 time.sleep(60)
     
-    def _log_success(self, current_time, forecast_time, pinn_field, nn2_field):
+    def _get_current_sensor_readings(self, current_time: datetime):
+        """
+        Get current EDF sensor readings at time T.
+        
+        In real-time operation, this would fetch from:
+        - Live EDF API
+        - Real-time sensor database
+        - Latest sensor CSV file
+        
+        Returns:
+            Array of sensor readings [ppb], shape (9,)
+            Sensor order: ['482010026', '482010057', '482010069', '482010617', 
+                          '482010803', '482011015', '482011035', '482011039', '482016000']
+            Returns None if sensor data unavailable
+        """
+        import pandas as pd
+        import numpy as np
+        
+        # Try to load from sensor data file (for testing/validation)
+        # In production, this would be an API call or database query
+        sensor_files = [
+            Path("realtime/simpletesting/nn2trainingdata/sensors_final_synced.csv"),
+            Path("realtime/drive-download-20260202T042428Z-3-001/sensors_final_synced.csv"),
+            Path("/Users/neevpratap/Downloads/sensors_final_synced.csv"),
+        ]
+        
+        sensor_file = None
+        for f in sensor_files:
+            if f.exists():
+                sensor_file = f
+                break
+        
+        if sensor_file is None:
+            print("    ⚠ No sensor data file found - Kalman filter will use PINN only")
+            return None
+        
+        try:
+            df = pd.read_csv(sensor_file)
+            if 't' in df.columns:
+                df = df.rename(columns={'t': 'timestamp'})
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            
+            # Find closest timestamp (within 1 hour)
+            time_diff = (df['timestamp'] - current_time).abs()
+            closest_idx = time_diff.idxmin()
+            
+            if time_diff[closest_idx] > pd.Timedelta(hours=1):
+                print(f"    ⚠ No sensor data within 1 hour of {current_time} - using PINN only")
+                return None
+            
+            # Extract sensor readings in correct order
+            sensor_ids = [
+                '482010026', '482010057', '482010069',
+                '482010617', '482010803', '482011015',
+                '482011035', '482011039', '482016000'
+            ]
+            
+            sensor_cols = [f'sensor_{sid}' for sid in sensor_ids]
+            readings = df.loc[closest_idx, sensor_cols].values.astype(float)
+            
+            # Handle NaN values (missing sensors)
+            readings = np.nan_to_num(readings, nan=0.0)
+            
+            print(f"    ✓ Loaded sensor readings from {df.loc[closest_idx, 'timestamp']}")
+            return readings
+            
+        except Exception as e:
+            print(f"    ⚠ Error loading sensor data: {e} - using PINN only")
+            return None
+    
+    def _log_success(self, current_time, forecast_time, pinn_field, corrected_field):
         """Log successful run"""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         log_entry = (
@@ -166,7 +240,7 @@ class RealtimePipeline:
             f"Current: {current_time.strftime('%Y-%m-%d %H:%M')} | "
             f"Forecast: {forecast_time.strftime('%Y-%m-%d %H:%M')} | "
             f"PINN: {pinn_field.min():.3f}-{pinn_field.max():.3f} ppb | "
-            f"NN2: {nn2_field.min():.3f}-{nn2_field.max():.3f} ppb\n"
+            f"Kalman: {corrected_field.min():.3f}-{corrected_field.max():.3f} ppb\n"
         )
         
         with open(self.log_file, 'a') as f:
@@ -200,10 +274,11 @@ class RealtimePipeline:
             stats['superimposed_rows'] = len(df)
             stats['unique_forecasts'] = df['forecast_timestamp'].nunique()
         
-        if nn2_corrected_path.exists():
+        kalman_corrected_path = CONTINUOUS_DIR / "kalman_corrected_domain_timeseries.csv"
+        if kalman_corrected_path.exists():
             import pandas as pd
-            df = pd.read_csv(nn2_corrected_path)
-            stats['nn2_corrected_rows'] = len(df)
+            df = pd.read_csv(kalman_corrected_path)
+            stats['kalman_corrected_rows'] = len(df)
         
         return stats
 
@@ -244,8 +319,8 @@ def main():
             print(f"\nSuperimposed Concentrations: {stats['superimposed_rows']:,} rows")
             print(f"Unique Forecasts: {stats['unique_forecasts']}")
         
-        if 'nn2_corrected_rows' in stats:
-            print(f"NN2-Corrected Domain: {stats['nn2_corrected_rows']:,} rows")
+        if 'kalman_corrected_rows' in stats:
+            print(f"Kalman-Corrected Domain: {stats['kalman_corrected_rows']:,} rows")
         
         print("\n" + "="*70)
         

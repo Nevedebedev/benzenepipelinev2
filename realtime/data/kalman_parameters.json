@@ -1,0 +1,11 @@
+{
+  "process_noise": 0.1,
+  "measurement_noise": 0.5,
+  "decay_rate": 0.7,
+  "pinn_weight": 0.1,
+  "mae": 0.3219863451590315,
+  "rmse": 1.3538338707039783,
+  "detection_rate": 0.0,
+  "false_alarm_rate": 0.0,
+  "peak_capture": 0.0
+}

@@ -1,0 +1,16 @@
+parameter,value,detection_rate
+process_noise,0.1,0.0
+process_noise,0.5,0.0
+process_noise,1.0,0.0
+process_noise,2.0,0.0
+process_noise,5.0,0.0
+decay_rate,0.1,0.0
+decay_rate,0.3,0.0
+decay_rate,0.5,0.0
+decay_rate,0.7,0.0
+decay_rate,0.9,0.0
+pinn_weight,0.1,0.0
+pinn_weight,0.3,0.0
+pinn_weight,0.5,0.0
+pinn_weight,0.7,0.0
+pinn_weight,0.9,0.0

@@ -1,0 +1,45 @@
+{
+  "year": 2019,
+  "n_samples": 961,
+  "pinn_mae": 0.46707703290765357,
+  "kalman_mae": 0.3219863451590315,
+  "improvement_pct": 31.063545737927157,
+  "normal_mae": 0.2392698911886168,
+  "extreme_mae": 16.13737234430232,
+  "response_rate_pct": 0.0,
+  "extreme_events": {
+    "10.0": {
+      "n_samples": 5,
+      "pinn_mae": 16.21843509991626,
+      "kalman_mae": 16.13737234430232,
+      "improvement_pct": 0.4998186021927435,
+      "upper_detection_rate": 0.0,
+      "point_detection_rate": 0.0,
+      "peak_capture_rate": 0.0,
+      "mean_peak_error_pct": 98.02330516771526,
+      "false_alarm_rate": 0.0
+    },
+    "20.0": {
+      "n_samples": 1,
+      "pinn_mae": 20.49648669498119,
+      "kalman_mae": 20.26727191494904,
+      "improvement_pct": 1.1183125354272425,
+      "upper_detection_rate": 0.0,
+      "point_detection_rate": 0.0,
+      "peak_capture_rate": 0.0,
+      "mean_peak_error_pct": 97.57962688245358,
+      "false_alarm_rate": 0.0
+    },
+    "50.0": {
+      "n_samples": 0,
+      "pinn_mae": 0.0,
+      "kalman_mae": 0.0,
+      "improvement_pct": 0.0,
+      "upper_detection_rate": 0.0,
+      "point_detection_rate": 0.0,
+      "peak_capture_rate": 0.0,
+      "mean_peak_error_pct": 0.0,
+      "false_alarm_rate": 0.0
+    }
+  }
+}

@@ -1,0 +1,67 @@
+====================================================================================================
+FEBRUARY 2021 FREEZE EVENT - FACTOR ANALYSIS & COMPARISON
+====================================================================================================
+
+COMPARING 2019 HAZARDS vs 2021 FREEZE EVENTS
+----------------------------------------------------------------------------------------------------
+
+2019 HAZARDS (Top 10):
+  EDF Peak Range: 48.03 - 196.94 ppb
+  Wind Speed: mean=2.68 m/s, min=0.85, max=4.95
+  Diffusion: mean=20.17 m²/s, min=1.46, max=53.67
+  Emission: mean=0.000672 kg/s, min=0.000322, max=0.001095
+
+2021 FREEZE EVENTS (Feb 11-20):
+  EDF Peak Range: 0.24 - 24.22 ppb
+  Wind Speed: mean=3.42 m/s, min=2.64, max=5.00
+  Diffusion: mean=7.30 m²/s, min=5.51, max=11.18
+  Emission: mean=0.000585 kg/s, min=0.000322, max=0.001095
+
+COMPARISON:
+----------------------------------------------------------------------------------------------------
+  EDF Concentrations: 2019 max=196.94 ppb vs 2021 max=24.22 ppb
+  Wind Speed: 2019=2.68 m/s vs 2021=3.42 m/s (+27.7%)
+  Diffusion: 2019=20.17 m²/s vs 2021=7.30 m²/s (-63.8%)
+  Emission: 2019=0.000672 kg/s vs 2021=0.000585 kg/s (-13.0%)
+
+====================================================================================================
+KEY FACTORS CAUSING FREEZE EVENTS
+====================================================================================================
+
+1. WIND SPEED:
+   - 2021 Freeze: 3.42 m/s average (very low)
+   - 2019 Hazards: 2.68 m/s average
+   - Low wind = slow dispersion = higher concentrations
+   - Freeze events had -27.7% lower wind than 2019 hazards
+
+2. DIFFUSION COEFFICIENT:
+   - 2021 Freeze: 7.30 m²/s average (very low)
+   - 2019 Hazards: 20.17 m²/s average
+   - Low diffusion = poor mixing = higher concentrations
+   - Freeze events had 63.8% lower diffusion than 2019 hazards
+
+3. EMISSION RATES:
+   - 2021 Freeze: 0.000585 kg/s average
+   - 2019 Hazards: 0.000672 kg/s average
+   - Emissions are SIMILAR between events
+   - Emissions are NORMAL, not elevated during freeze
+
+4. COMBINED EFFECT (Dispersion Index = Wind × Diffusion):
+   - 2021 Freeze: 24.95 (m/s × m²/s)
+   - 2019 Hazards: 53.99 (m/s × m²/s)
+   - Freeze had 53.8% lower dispersion capacity
+   - Lower dispersion = pollutants accumulate near sources
+
+====================================================================================================
+CONCLUSION
+====================================================================================================
+
+The February 2021 freeze events were caused by STABLE METEOROLOGICAL CONDITIONS:
+
+1. Very low wind speeds during freeze period
+2. Very low diffusion coefficients (poor atmospheric mixing)
+3. Normal emission rates (not elevated)
+4. Combined effect: Poor dispersion → Accumulation → High concentrations
+
+This is similar to 2019 hazards, which were also caused by stable conditions
+rather than accidents or elevated emissions.
